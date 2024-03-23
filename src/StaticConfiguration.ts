@@ -58,7 +58,14 @@ class StaticConfiguration {
   };
 
   // Line colors are picked in the order of this array.
-  public static readonly liveGraphColors = ['#f9808e', '#80f98e', '#808ef9', '#fad16c', '#4cfaee', '#fa4cfa'];
+  public static readonly liveGraphColors = [
+    '#f9808e',
+    '#80f98e',
+    '#808ef9',
+    '#fad16c',
+    '#4cfaee',
+    '#fa4cfa',
+  ];
 
   // What will the min and max y-values on the livegraph be?
   public static readonly liveGraphValueBounds = {
