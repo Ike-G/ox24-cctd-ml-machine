@@ -276,6 +276,12 @@ export class MicrobitBluetooth {
     const magnetometerCharacteristic: BluetoothRemoteGATTCharacteristic =
       await magnetometerService.getCharacteristic(MBSpecs.Characteristics.MAGNET_DATA);
 
+    // Uncommenting the below triggers a compass calibration
+    // const calibration = await magnetometerService.getCharacteristic(
+    //   MBSpecs.Characteristics.COMPASS_CALIBRATE,
+    // );
+    // await calibration.writeValue(new Uint8Array([1]));
+
     await magnetometerCharacteristic.startNotifications();
 
     magnetometerCharacteristic.addEventListener(

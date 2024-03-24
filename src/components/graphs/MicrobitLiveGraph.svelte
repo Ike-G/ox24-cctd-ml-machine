@@ -5,9 +5,13 @@
 
 <script lang="ts">
   import StaticConfiguration from '../../StaticConfiguration';
-  import { liveCombinedData, liveAccelerometerData, liveMagnetometerData } from '../../script/stores/Stores';
+  import {
+    liveCombinedData,
+    liveAccelerometerData,
+    liveMagnetometerData,
+  } from '../../script/stores/Stores';
   import LiveGraph from './LiveGraph.svelte';
-  import LiveData from '../../script/domain/stores/LiveData'
+  import LiveData from '../../script/domain/stores/LiveData';
 
   export let width: number;
 </script>
@@ -17,5 +21,3 @@
   maxValue={StaticConfiguration.liveGraphValueBounds.max}
   liveData={liveCombinedData}
   {width} />
-
-  
