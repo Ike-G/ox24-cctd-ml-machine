@@ -97,6 +97,14 @@ namespace MBSpecs {
      * The magnetometer data characteristic.
      */
     export const MAGNET_DATA = 'e95dfb11-251d-470a-a062-fa1922dfa9a8';
+    /**
+     * The magnetometer compass characteristic.
+     */
+    export const COMPASS_DATA = 'e95d9715-251d-470a-a062-fa1922dfa9a8';
+    /**
+     * The magnetometer compass calibration characteristic.
+     */
+    export const COMPASS_CALIBRATE = 'e95db358-251d-470a-a062-fa1922dfa9a8';
   }
 
   export namespace USBSpecs {
