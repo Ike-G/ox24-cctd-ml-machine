@@ -23,5 +23,5 @@
   };
 </script>
 
-<button class="border-1 p-2 m-1" on:click={trainModelButtonClicked}
+<button class="border-1 p-2 m-1 hover:(font-bold)" on:click={trainModelButtonClicked}
   >train layers model!</button>

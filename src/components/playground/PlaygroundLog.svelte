@@ -10,7 +10,7 @@
 
 <div>
   {#each $playgroundContext.messages as message}
-    <p class="whitespace-pre mb-1 hover:(font-bold) border-b-1 border-solid">
+    <p class="whitespace-pre mb-1 border-b-1 border-solid">
       > {message.toString()}
     </p>
   {/each}

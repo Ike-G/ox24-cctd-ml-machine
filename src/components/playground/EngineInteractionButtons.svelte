@@ -34,16 +34,16 @@
 
 <TrainLayersModelButton />
 <TrainKnnModelButton />
-<button class="border-1 p-2 m-1" on:click={predictButtonClicked}
+<button class="border-1 p-2 m-1 hover:(font-bold)" on:click={predictButtonClicked}
   >Predict random gesture!</button>
 <button
-  class="border-1 p-2 m-1"
+  class="border-1 p-2 m-1 hover:(font-bold)"
   on:click={() => {
     playgroundContext.addMessage('Starting engine');
     engine.start();
   }}>Start engine!</button>
 <button
-  class="border-1 p-2 m-1"
+  class="border-1 p-2 m-1 hover:(font-bold)" 
   on:click={() => {
     playgroundContext.addMessage('Stopping engine');
     engine.stop();
