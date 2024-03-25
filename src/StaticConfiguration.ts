@@ -11,6 +11,8 @@ import { PinTurnOnState } from './components/output/PinSelectorUtil';
 import MBSpecs from './script/microbit-interfacing/MBSpecs';
 import { HexOrigin } from './script/microbit-interfacing/Microbits';
 import { LayersModelTrainingSettings } from './script/mlmodels/LayersModelTrainer';
+import { MoEModelTrainingSettings } from './script/mlmodels/MoEModelTrainer';
+
 
 class StaticConfiguration {
   // in milliseconds, how long should be wait for reconnect before determining something catestrophic happened during the process?
@@ -109,6 +111,17 @@ class StaticConfiguration {
     learningRate: 0.5,
     validationSplit: 0.1,
     noOfUnits: 16, // size of hidden layer
+  };
+
+  // The settings given to the MoEModelTrainer
+  public static readonly MoEModelTrainingSettings: MoEModelTrainingSettings = {
+    noOfEpochs: 80,
+    batchSize: 16,
+    learningRate: 0.5,
+    validationSplit: 0.1,
+    noOfUnits: 16,
+    numExperts: 2,
+    topK: 1,
   };
 
   public static readonly knnNeighbourCount = 10;

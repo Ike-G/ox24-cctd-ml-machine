@@ -1,0 +1,146 @@
+/**
+ * (c) 2023, Center for Computational Thinking and Design at Aarhus University and contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+import ModelTrainer, { TrainingData } from '../domain/ModelTrainer';
+import LayersMLModel from './LayersMLModel';
+import * as tf from '@tensorflow/tfjs';
+export type MoEModelTrainingSettings = {
+  noOfEpochs: number;
+  noOfUnits: number;
+  validationSplit: number;
+  learningRate: number;
+  batchSize: number;
+  numExperts: number;
+  topK: number;
+}; 
+class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
+  constructor(private settings: MoEModelTrainingSettings) {}
+  public async trainModel(trainingData: TrainingData): Promise<LayersMLModel> {
+
+    // Fetch data
+    const features: Array<number[]> = [];
+    const labels: Array<number[]> = [];
+    const numberOfClasses = trainingData.classes.length;
+
+    trainingData.classes.forEach((gestureClass, index) => {
+      gestureClass.samples.forEach(sample => {
+        features.push(sample.value);
+
+        const label: number[] = new Array(numberOfClasses) as number[];
+        label.fill(0, 0, numberOfClasses);
+        label[index] = 1;
+        labels.push(label);
+      });
+    });
+
+    const tensorFeatures = tf.tensor(features);
+    const tensorLabels = tf.tensor(labels);
+
+    const expertNetwork = (input: tf.SymbolicTensor) => {
+      const normalizer = tf.layers.batchNormalization().apply(input);
+      const dense = tf.layers
+        .dense({ units: this.settings.noOfUnits, activation: 'relu' })
+        .apply(normalizer);
+      return tf.layers
+        .dense({ units: numberOfClasses, activation: 'softmax' })
+        .apply(dense) as tf.SymbolicTensor;
+    }
+
+    const gatingNetwork = (input: tf.SymbolicTensor) => {
+      const normalizer = tf.layers.batchNormalization().apply(input);
+      const dense = tf.layers
+        .dense({ units: this.settings.numExperts, activation: 'relu' })
+        .apply(normalizer);
+      return tf.layers
+        .dense({ units: this.settings.numExperts, activation: 'softmax' })
+        .apply(dense) as tf.SymbolicTensor;
+    }
+
+    class MoEDistributer extends tf.layers.Layer {
+      constructor(gateNet : tf.SymbolicTensor, expertNets : Array<tf.SymbolicTensor>) {
+        super({});
+      }
+
+      call(inputs: tf.Tensor[]) : tf.Tensor {
+        
+      }
+
+    }
+
+    class gatingMultiplier extends tf.layers.Layer {
+      constructor() {
+          super({});
+      }
+
+      call(inputs: tf.Tensor[]): tf.Tensor {
+          console.log("Made it here")
+          const gate: tf.Tensor = inputs[0];
+          const branches: tf.Tensor[] = inputs.slice(1);
+  
+          // Calculate the weighted sum for multiclass classification
+          // cleaning up extra tensors along the way
+          const add = tf.tidy(() => {
+              const weightedSums: tf.Tensor[] = [];
+              for (let i = 0; i < branches.length; i++) {
+                  const branchTranspose = tf.transpose(branches[i]);
+                  //extract the weighting for this specific expert
+                  const gateSlice = gate.slice([0, i], [-1, 1]);
+                  console.log("Gateslice:", gateSlice);
+                  //const gateSlice = gate[i]
+                  const weightedSum = tf.mul(branchTranspose, gateSlice);
+                  weightedSums.push(weightedSum);
+              }
+              return tf.sum(tf.stack(weightedSums), 0);
+          });
+
+
+  
+          return add;
+      }
+
+      getClassName() {return 'MoE full';}
+    }
+
+    // Find the shape by looking at the first data point
+    const shape = [trainingData.classes[0].samples[0].value.length];
+    //const gN = gatingNetwork(shape)
+    const expertNetworks : Array<tf.SymbolicTensor> = [];
+  
+    // Construct the final MoE model
+    const input = tf.input({ shape: shape }); 
+
+    for (let i = 0; i < this.settings.numExperts; i++) {
+      const expert = expertNetwork(input);
+      expertNetworks.push(expert);
+    }
+    const gN = gatingNetwork(input)
+
+    const gatingLayer = new gatingMultiplier();
+    const gatingInput = [gN, ...expertNetworks]
+    const output : tf.SymbolicTensor =  gatingLayer.apply(gatingInput) as tf.SymbolicTensor;
+    const moeModel = tf.model({ inputs: input, outputs: output }) as tf.LayersModel;
+
+    // Compile the MoE model
+    moeModel.compile({
+      loss: 'categoricalCrossentropy',
+      optimizer: tf.train.adam(this.settings.learningRate),
+      metrics: ['accuracy'],
+    });
+
+    // Train the MoE model
+    await moeModel.fit(tensorFeatures, tensorLabels, {
+      epochs: this.settings.noOfEpochs,
+      batchSize: this.settings.batchSize,
+      validationSplit: this.settings.validationSplit,
+    }).catch(err => {
+      console.error('TensorFlow training process failed:', err);
+      return Promise.reject(err);
+    });
+    return Promise.resolve(new LayersMLModel(moeModel));
+  }
+
+}
+
+export default MoEModelTrainer;

@@ -8,6 +8,7 @@
   import { t } from '../../i18n';
   import { classifier } from '../../script/stores/Stores';
   import LayersModelTrainer from '../../script/mlmodels/LayersModelTrainer';
+  import MoEModelTrainer from '../../script/mlmodels/MoEModelTrainer';
   import StaticConfiguration from '../../StaticConfiguration';
   import StandardDropdownButton from '../../components/buttons/StandardDropdownButton.svelte';
   import KNNModelTrainer from '../../script/mlmodels/KNNModelTrainer';
@@ -38,6 +39,13 @@
       title: 'KNN',
       label: 'KNN',
       trainer: () => new KNNModelTrainer(StaticConfiguration.knnNeighbourCount),
+    },
+    {
+      id: 'MoE',
+      title: 'Mixture of Experts',
+      label: 'mixture of experts',
+      trainer: () =>
+        new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings),
     },
   ];
 
