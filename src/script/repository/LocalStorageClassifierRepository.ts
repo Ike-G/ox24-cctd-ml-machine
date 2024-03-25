@@ -17,6 +17,7 @@ import ClassifierRepository from '../domain/ClassifierRepository';
 import Gesture, { GestureID } from '../domain/stores/gesture/Gesture';
 import Classifier from '../domain/stores/Classifier';
 import GestureConfidence from '../domain/stores/gesture/GestureConfidence';
+import { SensorChoices } from '../SensorChoice';
 
 export type TrainerConsumer = <T extends MLModel>(
   trainer: ModelTrainer<T>,
@@ -30,7 +31,7 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
   private static persistedFilters: PersistantWritable<FilterType[]>;
   private classifierFactory: ClassifierFactory;
 
-  constructor() {
+  constructor(private sensorChoices: SensorChoices) { // TEMPORARY ARGUMENT
     const initialConfidence = new Map<GestureID, number>();
     LocalStorageClassifierRepository.confidences = writable(initialConfidence);
     LocalStorageClassifierRepository.mlModel = writable(undefined);
@@ -40,6 +41,7 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
     );
     LocalStorageClassifierRepository.filters = new Filters(this.getFilters());
     this.classifierFactory = new ClassifierFactory();
+
   }
 
   public getClassifier(): Classifier {
@@ -54,6 +56,7 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
       (gestureId: GestureID, confidence: number) => {
         this.setGestureConfidence(gestureId, confidence);
       },
+      this.sensorChoices, 
     );
 
     return classifier;
@@ -69,6 +72,7 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
     const trainingData = this.classifierFactory.buildTrainingData(
       get(gestureRepository),
       LocalStorageClassifierRepository.filters,
+      this.sensorChoices,
     );
     const model = await trainer.trainModel(trainingData);
     LocalStorageClassifierRepository.mlModel.set(model);

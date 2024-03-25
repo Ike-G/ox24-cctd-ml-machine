@@ -6,11 +6,14 @@
 import { Subscriber, Unsubscriber, Writable, derived, get, writable } from 'svelte/store';
 import AccelerometerClassifierInput from '../mlmodels/AccelerometerClassifierInput';
 import { MicrobitAccelerometerData } from '../livedata/MicrobitAccelerometerData';
+import { FlatCombinedData } from '../livedata/CombinedData';
 import StaticConfiguration from '../../StaticConfiguration';
 import { TimestampedData } from '../domain/LiveDataBuffer';
 import Engine, { EngineData } from '../domain/stores/Engine';
 import Classifier from '../domain/stores/Classifier';
 import LiveData from '../domain/stores/LiveData';
+import GeneralClassifierInput from '../mlmodels/GeneralClassifierInput';
+import { sensorChoiceKeys } from '../SensorChoice';
 
 class PollingPredictorEngine implements Engine {
   private pollingInterval: ReturnType<typeof setInterval> | undefined;
@@ -18,7 +21,7 @@ class PollingPredictorEngine implements Engine {
 
   constructor(
     private classifier: Classifier,
-    private liveData: LiveData<MicrobitAccelerometerData>,
+    private liveData: LiveData<FlatCombinedData>,
   ) {
     this.isRunning = writable(true);
     this.startPolling();
@@ -59,14 +62,18 @@ class PollingPredictorEngine implements Engine {
     }
   }
 
-  private bufferToInput(): AccelerometerClassifierInput {
+  private bufferToInput(): GeneralClassifierInput {
     const bufferedData = this.getRawDataFromBuffer(
       StaticConfiguration.pollingPredictionSampleSize,
     );
-    const xs = bufferedData.map(data => data.value.x);
-    const ys = bufferedData.map(data => data.value.y);
-    const zs = bufferedData.map(data => data.value.z);
-    return new AccelerometerClassifierInput(xs, ys, zs);
+    return new GeneralClassifierInput({
+      accx: bufferedData.map(data => data.value.accx),
+      accy: bufferedData.map(data => data.value.accy),
+      accz: bufferedData.map(data => data.value.accz),
+      magx: bufferedData.map(data => data.value.magx),
+      magy: bufferedData.map(data => data.value.magy),
+      magz: bufferedData.map(data => data.value.magz),
+    });
   }
 
   /**
@@ -74,7 +81,7 @@ class PollingPredictorEngine implements Engine {
    */
   private getRawDataFromBuffer(
     sampleSize: number,
-  ): TimestampedData<MicrobitAccelerometerData>[] {
+  ): TimestampedData<FlatCombinedData>[] {
     try {
       return this.liveData
         .getBuffer()

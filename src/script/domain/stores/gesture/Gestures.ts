@@ -26,9 +26,12 @@ export type PersistantGestureData = {
 export type RecordingData = {
   ID: number;
   data: {
-    x: number[];
-    y: number[];
-    z: number[];
+    accx: number[];
+    accy: number[];
+    accz: number[];
+    magx: number[];
+    magy: number[];
+    magz: number[];
   };
 };
 

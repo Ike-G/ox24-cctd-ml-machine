@@ -143,14 +143,12 @@ class InputBehaviour extends LoggingDecorator {
   accelerometerChange(x: number, y: number, z: number): void {
     super.accelerometerChange(x, y, z);
 
-    const accelX = x / 1000.0;
-    const accelY = y / 1000.0;
-    const accelZ = z / 1000.0;
+    const f = (u: number) => u / 1000.0;
 
     liveAccelerometerData.put({
-      x: accelX,
-      y: accelY,
-      z: accelZ,
+      x: f(x),
+      y: f(y),
+      z: f(z),
     });
   }
 
@@ -159,7 +157,7 @@ class InputBehaviour extends LoggingDecorator {
 
     // Each value has absolute value <= 2^15, so we rescale to get all values in [-2.5,2.5]
     // Also, sign seems to be irrelevant
-    const f = (x: number) => (Math.abs(x) / 2 ** 15 - 0.5) * 5;
+    const f = (u: number) => (Math.abs(u) / 2 ** 15 - 0.5) * 5;
 
     liveMagnetometerData.put({
       x: f(x),

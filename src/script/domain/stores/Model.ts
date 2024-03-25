@@ -15,6 +15,7 @@ import {
 import { TrainerConsumer } from '../../repository/LocalStorageClassifierRepository';
 import MLModel from '../MLModel';
 import ModelTrainer from '../ModelTrainer';
+import { SensorChoices } from '../../SensorChoice';
 
 export enum TrainingStatus {
   Untrained,
@@ -29,6 +30,7 @@ export enum ModelType {
 
 type BaseModelData = {
   trainingStatus: TrainingStatus;
+  sensors: SensorChoices;
 };
 
 export type ModelData = {
@@ -43,9 +45,11 @@ class Model implements Readable<ModelData> {
   constructor(
     private trainerConsumer: TrainerConsumer,
     private mlModel: Readable<MLModel | undefined>,
+    sensorChoices: SensorChoices,
   ) {
     this.modelData = writable({
       trainingStatus: TrainingStatus.Untrained,
+      sensors: sensorChoices,
     });
   }
 
@@ -74,6 +78,13 @@ class Model implements Readable<ModelData> {
    */
   public isTrained(): boolean {
     return get(this.modelData).trainingStatus === TrainingStatus.Success;
+  }
+
+  /**
+   * @returns the sensor data which the model accesses.
+   */
+  public getSensors(): SensorChoices {
+    return get(this.modelData).sensors;
   }
 
   /**
@@ -118,6 +129,7 @@ class Model implements Readable<ModelData> {
       const inputStore = stores[0];
       const mlModelStore = stores[1];
       return {
+        sensors: inputStore.sensors,
         trainingStatus: inputStore.trainingStatus,
         isTraining: inputStore.trainingStatus === TrainingStatus.InProgress,
         hasModel: mlModelStore !== undefined,
