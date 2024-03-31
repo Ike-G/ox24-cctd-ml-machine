@@ -9,11 +9,12 @@
   import { get } from 'svelte/store';
   import * as d3 from 'd3';
   import { state } from '../../script/stores/uiStore';
-  import { gestures, liveAccelerometerData } from '../../script/stores/Stores';
+  import { gestures, liveAccelerometerData, liveCombinedData } from '../../script/stores/Stores';
   import FilterTypes, { FilterType } from '../../script/domain/FilterTypes';
   import FilterGraphLimits from '../../script/utils/FilterLimits';
   import { GestureData } from '../../script/domain/stores/gesture/Gesture';
   import { RecordingData } from '../../script/domain/stores/gesture/Gestures';
+    import StaticConfiguration from '../../StaticConfiguration';
 
   export let filterType: FilterType;
   export let fullScreen: boolean = false;
@@ -24,11 +25,14 @@
     ID: number;
     gestureClassName: string;
     gestureClassID: number;
-    x: number;
-    y: number;
-    z: number;
+    accx: number;
+    accy: number;
+    accz: number;
+    magx: number;
+    magy: number;
+    magz: number;
   };
-  type Axis = 'x' | 'y' | 'z';
+  type Axis = 'accx' | 'accy' | 'accz' | 'magx' | 'magy' | 'magz';
   type PathDrawer = (gesture: RecordingRepresentation) => string | null;
 
   // Data
@@ -48,7 +52,7 @@
   let plotDrawn = false;
 
   // Scalars to built graph and insert data in graph
-  const dimensions: Axis[] = ['x', 'y', 'z'];
+  const dimensions: Axis[] = ['accx', 'accy', 'accz', 'magx', 'magy', 'magz']; // TODO: allow this to vary
   const { min, max } = FilterGraphLimits.getFilterLimits(filter);
   const xScalar: d3.ScalePoint<string> = d3
     .scalePoint()
@@ -140,15 +144,19 @@
   }
 
   function createLiveData() {
-    const liveData = liveAccelerometerData.getBuffer().getNewestValues(1)[0];
+    const liveData = liveCombinedData.getBuffer().getNewestValues(1)[0];
+    // const liveData = liveAccelerometerData.getBuffer().getNewestValues(1)[0];
     if (liveData === undefined) return undefined;
     const filteredData: RecordingRepresentation = {
       ID: uniqueLiveDataID,
       gestureClassName: 'live',
       gestureClassID: uniqueLiveDataID,
-      x: filterFunction([liveData!.x]),
-      y: filterFunction([liveData!.y]),
-      z: filterFunction([liveData!.z]),
+      accx: filterFunction([liveData!.accx]),
+      accy: filterFunction([liveData!.accy]),
+      accz: filterFunction([liveData!.accz]),
+      magx: filterFunction([liveData!.magx]),
+      magy: filterFunction([liveData!.magy]),
+      magz: filterFunction([liveData!.magz]),
     };
     return filteredData;
   }
@@ -167,10 +175,13 @@
       }
       gestureClassObject.recordings.map((recording: RecordingData) => {
         const ID = recording.ID;
-        const x = filterFunction(recording.data.x);
-        const y = filterFunction(recording.data.y);
-        const z = filterFunction(recording.data.z);
-        recordings.push({ ID, gestureClassName, gestureClassID, x, y, z });
+        const accx = filterFunction(recording.data.accx);
+        const accy = filterFunction(recording.data.accy);
+        const accz = filterFunction(recording.data.accz);
+        const magx = filterFunction(recording.data.magx);
+        const magy = filterFunction(recording.data.magy);
+        const magz = filterFunction(recording.data.magz);
+        recordings.push({ ID, gestureClassName, gestureClassID, accx, accy, accz, magx, magy, magz });
       });
     });
     const classesIDs = [
@@ -260,11 +271,9 @@
       // Add axis title
       .append('text')
       .style('text-anchor', 'middle')
-      .style('font-size', '20px')
+      .style('font-size', '14px')
       .style('fill', function (axis: Axis) {
-        if (axis === 'x') return '#f9808e';
-        if (axis === 'y') return '#80f98e';
-        return '#808ef9';
+        return StaticConfiguration.liveGraphColors[dimensions.indexOf(axis)];
       })
       .attr('y', -9)
       .text(function (axis: Axis) {
