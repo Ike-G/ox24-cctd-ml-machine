@@ -37,7 +37,7 @@ class Classifier implements Readable<ClassifierData> {
    * Takes in a ClassifierInput object and updates the GestureConfidence store of each Gesture
    */
   public async classify(input: ClassifierInput): Promise<void> {
-    const filteredInput = input.getInput(this.filters);
+    const filteredInput = input.getInput(this.filters, this.model.getSensors());
     const predictions = await this.getModel().predict(filteredInput);
     predictions.forEach((confidence, index) => {
       const gesture = get(this.gestures)[index];

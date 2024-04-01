@@ -15,12 +15,25 @@ import { liveAccelerometerData } from '../stores/Stores';
 import StaticConfiguration from '../../StaticConfiguration';
 
 export type FlatCombinedData = {
-  xa: number;
-  ya: number;
-  za: number;
-  xm: number;
-  ym: number;
-  zm: number;
+  accx: number;
+  accy: number;
+  accz: number;
+  magx: number;
+  magy: number;
+  magz: number;
+};
+
+export type CombinedData = {
+  accel: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  magnet: {
+    x: number;
+    y: number;
+    z: number;
+  };
 };
 
 class CombinedLiveData implements LiveData<FlatCombinedData> {
@@ -37,7 +50,7 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
       ),
     );
     this.combinedStore = derived([accelerometerData, magnetometerData], ([a, m]) => {
-      let data = { xa: a.x, ya: a.y, za: a.z, xm: m.x, ym: m.y, zm: m.z };
+      let data = { accx: a.x, accy: a.y, accz: a.z, magx: m.x, magy: m.y, magz: m.z };
       this.dataBuffer.addValue(data);
       return data;
     });

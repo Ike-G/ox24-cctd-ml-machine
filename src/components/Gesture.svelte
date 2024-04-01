@@ -21,7 +21,7 @@
   import ImageSkeleton from './skeletonloading/ImageSkeleton.svelte';
   import GestureTilePart from './GestureTilePart.svelte';
   import StaticConfiguration from '../StaticConfiguration';
-  import { gestures, liveAccelerometerData } from '../script/stores/Stores';
+  import { gestures, liveAccelerometerData, liveCombinedData } from '../script/stores/Stores';
   import Gesture from '../script/domain/stores/gesture/Gesture';
   import { RecordingData } from '../script/domain/stores/gesture/Gestures';
 
@@ -70,13 +70,23 @@
     isThisRecording = true;
 
     // New array for data
-    let newData: { x: number[]; y: number[]; z: number[] } = { x: [], y: [], z: [] };
+    let newData: {
+      accx: number[];
+      accy: number[];
+      accz: number[];
+      magx: number[];
+      magy: number[];
+      magz: number[];
+    } = { accx: [], accy: [], accz: [], magx: [], magy: [], magz: [] };
 
     // Set timeout to allow recording in 1s
-    const unsubscribe = liveAccelerometerData.subscribe(data => {
-      newData.x.push(data.x);
-      newData.y.push(data.y);
-      newData.z.push(data.z);
+    const unsubscribe = liveCombinedData.subscribe(data => {
+      newData.accx.push(data.accx);
+      newData.accy.push(data.accy);
+      newData.accz.push(data.accz);
+      newData.magx.push(data.magx);
+      newData.magy.push(data.magy);
+      newData.magz.push(data.magz);
     });
 
     // Once duration is over (1000ms default), stop recording
@@ -84,7 +94,7 @@
       $state.isRecording = false;
       isThisRecording = false;
       unsubscribe();
-      if (StaticConfiguration.pollingPredictionSampleSize <= newData.x.length) {
+      if (StaticConfiguration.pollingPredictionSampleSize <= newData.accx.length) {
         const recording = { ID: Date.now(), data: newData } as RecordingData;
         gesture.addRecording(recording);
       } else {

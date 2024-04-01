@@ -5,7 +5,10 @@
  -->
 
 <script lang="ts">
-  import { liveAccelerometerData } from '../../script/stores/Stores';
+  import {
+    liveAccelerometerData,
+    liveMagnetometerData,
+  } from '../../script/stores/Stores';
 
   let utilization = 0;
   setInterval(() => {

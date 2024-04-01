@@ -12,6 +12,7 @@ import { TrainerConsumer } from '../repository/LocalStorageClassifierRepository'
 import Gesture, { GestureID } from './stores/gesture/Gesture';
 import Model from './stores/Model';
 import { RecordingData } from './stores/gesture/Gestures';
+import { SensorChoices, sensorChoiceKeys } from '../SensorChoice';
 
 class ClassifierFactory {
   public buildClassifier(
@@ -20,9 +21,10 @@ class ClassifierFactory {
     filters: Filters,
     gestures: Readable<Gesture[]>,
     confidenceSetter: (gestureId: GestureID, confidence: number) => void,
+    sensors: SensorChoices,
   ): Classifier {
     const classifier = new Classifier(
-      this.buildModel(trainerConsumer, model),
+      this.buildModel(trainerConsumer, model, sensors),
       filters,
       gestures,
       confidenceSetter,
@@ -44,10 +46,14 @@ class ClassifierFactory {
     return classifier;
   }
 
-  public buildTrainingData(gestures: Gesture[], filters: Filters): TrainingData {
+  public buildTrainingData(
+    gestures: Gesture[],
+    filters: Filters,
+    sensors: SensorChoices,
+  ): TrainingData {
     const classes = gestures.map(gesture => {
       return {
-        samples: this.buildFilteredSamples(gesture.getRecordings(), filters),
+        samples: this.buildFilteredSamples(gesture.getRecordings(), filters, sensors),
       };
     });
 
@@ -59,20 +65,31 @@ class ClassifierFactory {
   private buildModel(
     trainerConsumer: TrainerConsumer,
     mlModel: Writable<MLModel | undefined>,
+    sensors: SensorChoices,
   ): Model {
-    const model = new Model(trainerConsumer, mlModel);
+    const model = new Model(trainerConsumer, mlModel, sensors);
     return model;
   }
 
-  private buildFilteredSamples(recordings: RecordingData[], filters: Filters) {
+  private buildFilteredSamples(
+    recordings: RecordingData[],
+    filters: Filters,
+    sensors: SensorChoices,
+  ) {
     return recordings.map(recording => {
       const data = recording.data;
       return {
-        value: [
-          ...filters.compute(data.x),
-          ...filters.compute(data.y),
-          ...filters.compute(data.z),
-        ],
+        value: (sensorChoiceKeys(sensors) as (keyof typeof data)[]).reduce(
+          (fxs: number[], sensor: keyof typeof data) => {
+            return fxs.concat(filters.compute(data[sensor]));
+          },
+          [],
+        ),
+        // [
+        //  ...filters.compute(data.x),
+        //  ...filters.compute(data.y),
+        //  ...filters.compute(data.z),
+        //],
       };
     });
   }
