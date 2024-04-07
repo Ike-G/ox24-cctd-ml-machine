@@ -6,6 +6,7 @@
 import ModelTrainer, { TrainingData } from '../domain/ModelTrainer';
 import LayersMLModel from './LayersMLModel';
 import * as tf from '@tensorflow/tfjs';
+
 export type MoEModelTrainingSettings = {
   noOfEpochs: number;
   noOfUnits: number;
@@ -14,11 +15,95 @@ export type MoEModelTrainingSettings = {
   batchSize: number;
   numExperts: number;
   topK: number;
-}; 
+};
+
+function applyGatingNetwork(
+  input: tf.SymbolicTensor,
+  numUnits: number,
+  numExperts: number,
+){
+  const first = tf.layers.batchNormalization().apply(input);
+  const second = tf.layers.dense({ units: numUnits, activation: 'relu' }).apply(first);
+  return tf.layers
+    //softmax to give probability distribution of which expert is the best choice
+    .dense({ units: numExperts, activation: 'softmax' })
+    .apply(second) as tf.Tensor<tf.Rank>
+}
+
+function applyExpertNetwork(
+  input: tf.SymbolicTensor,
+  numUnits: number,
+  numberOfClasses: number,
+){
+  const first = tf.layers.batchNormalization().apply(input);
+  const second = tf.layers.dense({ units: numUnits, activation: 'relu' }).apply(first);
+  return tf.layers
+    //don't want to put a softmax here else data travels through two softmaxes
+    //and gets "smushed" between 0 and 1 twice
+    .dense({ units: numberOfClasses, activation: 'relu' })
+    .apply(second) as tf.Tensor<tf.Rank>//as tf.SymbolicTensor;
+}
+
+class GatingMultiplier extends tf.layers.Layer {
+  constructor() {
+    super({});
+  }
+
+  //no trainable weights in the layer so no build method required
+
+  //returns a row vector of the weighted sums of: the gating networks confidence
+  //in each expert and the experts confidence in each class. One entry in the
+  //returned tensor for each corresponding class
+  call(inputs: tf.Tensor[]): tf.Tensor {
+    const gate: tf.Tensor = inputs[0];
+    const branches: tf.Tensor[] = inputs.slice(1);
+    //numClasses is the final dimension of an expert's shape
+    //so look at the first expert and take its final dim
+    const numClasses = branches[0].shape.slice(-1)[0];
+
+    // Calculate the weighted sum for multiclass classification
+    // cleaning up extra tensors along the way
+    const add = tf.tidy(() => {
+      const weightedSums: tf.Tensor[] = [];
+      for (let i = 0; i < branches.length; i++) {
+        const branchTranspose = tf.transpose(branches[i]);
+        //extract the weighting for this specific expert
+        const gateSlice = gate.slice([0, i], [-1, 1]);
+        const weightedSum = tf.matMul(branchTranspose, gateSlice);
+        weightedSums.push(weightedSum);
+      }
+    
+      var ret = tf.sum(tf.stack(weightedSums), 0);
+      ret = ret.reshape([1,numClasses])
+      //normalize confidences
+      const mag = tf.norm(ret)
+      ret = ret.div(mag)
+      return ret 
+    });
+
+    return add;
+  }
+  //necessary else we get an undefined error somewhere
+  getClassName() {
+    return 'MoEfull';
+  }
+  
+  //necessary as shape can't be automatically computed and
+  //we get an undefined error somewhere
+  computeOutputShape(inputShape : tf.Shape[]) {
+    //look at first expert, its last shape dimension is number of classes
+    const numClasses = inputShape[1].slice(-1)[0];
+    if (numClasses == null || !Number.isInteger(numClasses) || numClasses <= 0) {
+      throw new Error('Invalid number of classes');
+    }
+    return [1, numClasses]
+  }
+
+}
+
 class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
   constructor(private settings: MoEModelTrainingSettings) {}
   public async trainModel(trainingData: TrainingData): Promise<LayersMLModel> {
-
     // Fetch data
     const features: Array<number[]> = [];
     const labels: Array<number[]> = [];
@@ -38,100 +123,47 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
     const tensorFeatures = tf.tensor(features);
     const tensorLabels = tf.tensor(labels);
 
-    class expertNetwork extends tf.layers.Layer {
-      normalizer : any
-      dense : any
-      softmax : any //When given their actual types gives an error?
-      constructor(numUnits : number) {
-        super({});
-        this.normalizer = tf.layers.batchNormalization()
-        this.dense = tf.layers.dense({ units: numUnits, activation: 'relu' })
-        this.softmax = tf.layers.dense({ units: numberOfClasses, activation: 'softmax' })
-      }
-
-      call(inputs: tf.Tensor) : tf.Tensor {
-        var out : tf.Tensor = this.normalizer.apply(inputs)
-        out = this.dense.apply(out)
-        out = this.softmax.apply(out)
-        return out
-      }
-      getClassName() {return "expertNetwork"}
-    }
-
-    class gatingNetwork extends tf.layers.Layer {
-      normalizer : any
-      dense : any
-      softmax : any //When given their actual types gives an error?
-      constructor(numExperts : number) {
-        super({});
-        this.normalizer = tf.layers.batchNormalization()
-        this.dense = tf.layers.dense({ units: numExperts, activation: 'relu' })
-        this.softmax = tf.layers.dense({ units: numExperts, activation: 'softmax' })
-      }
-
-      call(inputs: tf.Tensor) : tf.Tensor {
-        var out : tf.Tensor = this.normalizer.apply(inputs)
-        out = this.dense.apply(out)
-        out = this.softmax.apply(out)
-        return out
-      }
-
-      getClassName() {return "expertNetwork"}
-    }
-
-    class gatingMultiplier extends tf.layers.Layer {
-      constructor() {
-          super({});
-      }
-
-      call(inputs: tf.Tensor[]): tf.Tensor {
-          console.log("Made it here")
-          const gate: tf.Tensor = inputs[0];
-          const branches: tf.Tensor[] = inputs.slice(1);
-  
-          // Calculate the weighted sum for multiclass classification
-          // cleaning up extra tensors along the way
-          const add = tf.tidy(() => {
-              const weightedSums: tf.Tensor[] = [];
-              for (let i = 0; i < branches.length; i++) {
-                  const branchTranspose = tf.transpose(branches[i]);
-                  //extract the weighting for this specific expert
-                  const gateSlice = gate.slice([0, i], [-1, 1]);
-                  console.log("Gateslice:", gateSlice);
-                  //const gateSlice = gate[i]
-                  const weightedSum = tf.mul(branchTranspose, gateSlice);
-                  weightedSums.push(weightedSum);
-              }
-              return tf.sum(tf.stack(weightedSums), 0);
-          });
-
-          return add;
-      }
-      getClassName() {return 'MoEfull';}
-    }
-
     // Find the shape by looking at the first data point
     const shape = [trainingData.classes[0].samples[0].value.length];
-  
+
     // Construct the final MoE model
     const input = tf.input({ shape: shape });
+    const gateOutput = applyGatingNetwork(input, this.settings.noOfUnits, this.settings.numExperts) as tf.Tensor<tf.Rank>;
+    const expertOutputs = Array.from(Array(this.settings.numExperts)).map(() =>
+      applyExpertNetwork(input, this.settings.noOfUnits, numberOfClasses),
+    );
 
-    const expertNetworks : Array<expertNetwork> = [];
-    for (let i = 0; i < this.settings.numExperts; i++) {
-      const expert = new expertNetwork(this.settings.noOfUnits);
-      expertNetworks.push(expert);
-    }
-    const gN = new gatingNetwork(this.settings.numExperts);
-    const multiplierLayer = new gatingMultiplier();
-    //const testLayer = tf.layers.dense({ units: this.settings.noOfUnits, activation: 'relu' })
-    //const testOutput = testLayer.apply(input) as tf.Tensor
+    const combined = [gateOutput, ...expertOutputs];
+    const multiplierOutput = new GatingMultiplier().apply(
+      combined,
+    ) as tf.SymbolicTensor;
 
-    const gateOutput = gN.apply(input) as tf.Tensor
-    const expertOutputs = expertNetworks.map((net) => net.apply(input)) as tf.Tensor[]
-    const multiplierInput : Array<tf.Tensor> = [gateOutput].concat(expertOutputs)
+    //must be softmax at output layer to convert to a probability distribution
+    const output = tf.layers 
+      .dense({ units: numberOfClasses, activation: 'softmax' })
+      .apply(multiplierOutput) as tf.SymbolicTensor;
 
-    const output : tf.SymbolicTensor =  multiplierLayer.apply(multiplierInput) as tf.SymbolicTensor;
-    const moeModel = tf.model({ inputs: input, outputs: output }) as tf.LayersModel;
+    const moeModel = tf.model({ inputs: input, outputs: output});
+
+    /*
+    class AccuracyLogger extends tf.CustomCallback {
+      constructor() {
+        super({});
+      }
+
+      async onEpochEnd(epoch: number, logs: tf.Logs) {
+        const accuracy = logs["loss"] as number; 
+        const totalTests = logs["mean_absolute_error"] as number; 
+        console.log(accuracy);
+
+        if (!isNaN(accuracy) && !isNaN(totalTests) && totalTests !== undefined) {
+          const passedTests = Math.round(totalTests * accuracy); // Number of tests passed
+          console.log(`Epoch ${epoch}: ${passedTests} out of ${totalTests} tests passed`);
+        } else {
+          console.warn(`Epoch ${epoch}: Accuracy or total tests is NaN or undefined`);
+        }
+      }
+    }*/
 
     // Compile the MoE model
     moeModel.compile({
@@ -140,18 +172,27 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
       metrics: ['accuracy'],
     });
 
+    //const accuracyLogger = new AccuracyLogger();
+
     // Train the MoE model
-    await moeModel.fit(tensorFeatures, tensorLabels, {
-      epochs: this.settings.noOfEpochs,
-      batchSize: this.settings.batchSize,
-      validationSplit: this.settings.validationSplit,
-    }).catch(err => {
-      console.error('TensorFlow training process failed:', err);
-      return Promise.reject(err);
-    });
+    const history = await moeModel
+      .fit(tensorFeatures, tensorLabels, {
+        epochs: this.settings.noOfEpochs,
+        batchSize: this.settings.batchSize,
+        validationSplit: this.settings.validationSplit,
+        /*callbacks: [accuracyLogger],*/
+      })
+      .catch(err => {
+        console.error('TensorFlow training process failed:', err);
+        return Promise.reject(err);
+      });
+
+    //logs a list of 0s and 1s for each epoch, if every item in epoch
+    //was classified then 1 else 0
+    console.log("val_acc: ", history.history['val_acc']);
+
     return Promise.resolve(new LayersMLModel(moeModel));
   }
-
 }
 
 export default MoEModelTrainer;
