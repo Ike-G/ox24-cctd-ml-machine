@@ -1,8 +1,3 @@
-/**
- * (c) 2023, Center for Computational Thinking and Design at Aarhus University and contributors
- *
- * SPDX-License-Identifier: MIT
- */
 import ModelTrainer, { TrainingData } from '../domain/ModelTrainer';
 import LayersMLModel from './LayersMLModel';
 import * as tf from '@tensorflow/tfjs';
