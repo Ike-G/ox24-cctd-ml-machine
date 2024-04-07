@@ -11,7 +11,7 @@ import { PinTurnOnState } from './components/output/PinSelectorUtil';
 import MBSpecs from './script/microbit-interfacing/MBSpecs';
 import { HexOrigin } from './script/microbit-interfacing/Microbits';
 import { LayersModelTrainingSettings } from './script/mlmodels/LayersModelTrainer';
-import { MoEModelTrainingSettings } from './script/mlmodels/MoEModelTrainer (1)';
+import { MoEModelTrainingSettings } from './script/mlmodels/MoEModelTrainer';
 
 
 class StaticConfiguration {
