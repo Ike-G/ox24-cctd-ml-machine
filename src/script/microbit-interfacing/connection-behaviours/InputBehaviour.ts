@@ -155,14 +155,12 @@ class InputBehaviour extends LoggingDecorator {
   magnetometerChange(x: number, y: number, z: number): void {
     super.magnetometerChange(x, y, z);
 
-    // Each value has absolute value <= 2^15, so we rescale to get all values in [-2.5,2.5]
-    // Also, sign seems to be irrelevant
-    const f = (u: number) => (Math.abs(u) / 2 ** 15 - 0.5) * 5;
+    const f = (a: number, b: number) => (Math.atan2(Math.abs(a), Math.abs(b))/Math.PI - 0.25)*4;
 
     liveMagnetometerData.put({
-      x: f(x),
-      y: f(y),
-      z: f(z),
+      x: f(y, x), // <- Compass heading, in principle
+      y: f(x, z),
+      z: f(y, z),
     });
   }
 
