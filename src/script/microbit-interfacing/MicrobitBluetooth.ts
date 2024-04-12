@@ -37,7 +37,7 @@ export class MicrobitBluetooth {
    * @param {boolean => void} onDisconnect
    *      Fired when the micro:bit disconnects.
    * @param onReconnect
-   * 		What happens when the microbit reconnects after lost connection (leave undefined to turn off reconnect)
+   *      What happens when the microbit reconnects after lost connection (leave undefined to turn off reconnect)
    * @param onReconnectFailed What should happen when the microbit fails to reconnect?
    */
   protected constructor(
@@ -116,6 +116,13 @@ export class MicrobitBluetooth {
    */
   public async getIOService(): Promise<BluetoothRemoteGATTService> {
     return await this.getService(MBSpecs.Services.IO_SERVICE);
+  }
+
+  /**
+   * @returns {Promise<BluetoothRemoteGATTService>} The magnetometer service of the micro:bit.
+   */
+  public async getMagnetometerService(): Promise<BluetoothRemoteGATTService> {
+    return await this.getService(MBSpecs.Services.MAGNET_SERVICE);
   }
 
   /**
@@ -259,6 +266,38 @@ export class MicrobitBluetooth {
   }
 
   /**
+   * @param {(number, number, number) => void} onMagnetometerChanged Callback to be executed when the magnetometer changes.
+   */
+  public async listenToMagnetometer(
+    onMagnetometerChanged: (x: number, y: number, z: number) => void,
+  ): Promise<void> {
+    const magnetometerService: BluetoothRemoteGATTService =
+      await this.getMagnetometerService();
+    const magnetometerCharacteristic: BluetoothRemoteGATTCharacteristic =
+      await magnetometerService.getCharacteristic(MBSpecs.Characteristics.MAGNET_DATA);
+
+    // Uncommenting the below triggers a compass calibration
+    // const calibration = await magnetometerService.getCharacteristic(
+    //   MBSpecs.Characteristics.COMPASS_CALIBRATE,
+    // );
+    // await calibration.writeValue(new Uint8Array([1]));
+
+    await magnetometerCharacteristic.startNotifications();
+
+    magnetometerCharacteristic.addEventListener(
+      'characteristicvaluechanged',
+      (event: Event) => {
+        const target: CharacteristicDataTarget = event.target as CharacteristicDataTarget;
+        const x = target.value.getInt16(0, true);
+        const y = target.value.getInt16(2, true);
+        const z = target.value.getInt16(4, true);
+
+        onMagnetometerChanged(x, y, z);
+      },
+    );
+  }
+
+  /**
    * Display the 5x5 matrix on the micro:bit.
    *
    * @param {number[][]} matrix The matrix to display.
@@ -355,6 +394,7 @@ export class MicrobitBluetooth {
               MBSpecs.Services.LED_SERVICE,
               MBSpecs.Services.IO_SERVICE,
               MBSpecs.Services.BUTTON_SERVICE,
+              MBSpecs.Services.MAGNET_SERVICE,
             ],
           })
           .then(btDevice => {

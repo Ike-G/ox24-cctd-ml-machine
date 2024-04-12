@@ -25,6 +25,7 @@
   // Updates width to ensure that the canvas fills the whole screen
   export let width: number;
   export let liveData: LiveData<any>;
+
   export let maxValue: number;
   export let minValue: number;
 

@@ -14,12 +14,14 @@
   const trainModelButtonClicked = () => {
     playgroundContext.addMessage('training model...');
     model
-      .train(new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings))
+      .train(
+        new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings, () => {}),
+      )
       .then(() => {
         playgroundContext.addMessage('Finished training!');
       });
   };
 </script>
 
-<button class="border-1 p-2 m-1" on:click={trainModelButtonClicked}
+<button class="border-1 p-2 m-1 hover:(font-bold)" on:click={trainModelButtonClicked}
   >train layers model!</button>

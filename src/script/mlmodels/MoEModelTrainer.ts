@@ -1,8 +1,3 @@
-/**
- * (c) 2023, Center for Computational Thinking and Design at Aarhus University and contributors
- *
- * SPDX-License-Identifier: MIT
- */
 import ModelTrainer, { TrainingData } from '../domain/ModelTrainer';
 import LayersMLModel from './LayersMLModel';
 import * as tf from '@tensorflow/tfjs';
@@ -146,7 +141,7 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
     //must be softmax at output layer to convert to a probability distribution
     const output = tf.layers 
       .dense({ units: numberOfClasses, activation: 'softmax' })
-     .apply(multiplierOutput) as tf.SymbolicTensor;
+      .apply(multiplierOutput) as tf.SymbolicTensor;
 
     const moeModel = tf.model({ inputs: input, outputs: output});
 

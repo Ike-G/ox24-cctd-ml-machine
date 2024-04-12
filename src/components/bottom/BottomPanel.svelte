@@ -68,6 +68,7 @@
         <!-- The live text and info box -->
         <div class="float-left mt-2 ml-2">
           <LiveGraphInformationSection />
+          <!-- TODO: Update if including magnetometer -->
         </div>
         <div class="absolute right-2 top-2 m-0 float-right">
           <ConnectedLiveGraphButtons

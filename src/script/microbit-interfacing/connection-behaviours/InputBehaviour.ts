@@ -18,7 +18,7 @@ import LoggingDecorator from './LoggingDecorator';
 import TypingUtils from '../../TypingUtils';
 import { DeviceRequestStates } from '../../stores/connectDialogStore';
 import StaticConfiguration from '../../../StaticConfiguration';
-import { liveAccelerometerData } from '../../stores/Stores';
+import { liveAccelerometerData, liveMagnetometerData } from '../../stores/Stores';
 
 let text = get(t);
 t.subscribe(t => (text = t));
@@ -143,14 +143,26 @@ class InputBehaviour extends LoggingDecorator {
   accelerometerChange(x: number, y: number, z: number): void {
     super.accelerometerChange(x, y, z);
 
-    const accelX = x / 1000.0;
-    const accelY = y / 1000.0;
-    const accelZ = z / 1000.0;
+    const f = (u: number) => u / 1000.0;
 
     liveAccelerometerData.put({
-      x: accelX,
-      y: accelY,
-      z: accelZ,
+      x: f(x),
+      y: f(y),
+      z: f(z),
+    });
+  }
+
+  magnetometerChange(x: number, y: number, z: number): void {
+    super.magnetometerChange(x, y, z);
+
+    // Each value has absolute value <= 2^15, so we rescale to get all values in [-2.5,2.5]
+    // Also, sign seems to be irrelevant
+    const f = (u: number) => (Math.abs(u) / 2 ** 15 - 0.5) * 5;
+
+    liveMagnetometerData.put({
+      x: f(x),
+      y: f(y),
+      z: f(z),
     });
   }
 

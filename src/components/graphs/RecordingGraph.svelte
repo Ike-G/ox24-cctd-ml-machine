@@ -18,7 +18,14 @@
   } from 'chart.js';
   import RecordingInspector from '../3d-inspector/RecordingInspector.svelte';
 
-  export let data: { x: number[]; y: number[]; z: number[] };
+  export let data: {
+    accx: number[];
+    accy: number[];
+    accz: number[];
+    magx: number[];
+    magy: number[];
+    magz: number[];
+  };
 
   let verticalLineX = NaN;
   let hoverIndex = NaN;
@@ -32,9 +39,9 @@
       return { x: 0, y: 0, z: 0 };
     }
     return {
-      x: data.x[index],
-      y: data.y[index],
-      z: data.z[index],
+      x: data.accx[index],
+      y: data.accy[index],
+      z: data.accz[index],
     };
   };
 
@@ -81,13 +88,19 @@
     { x: number; y: number }[],
     string
   > {
-    const x: { x: number; y: number }[] = [];
-    const y: { x: number; y: number }[] = [];
-    const z: { x: number; y: number }[] = [];
-    for (let i = 1; i < data.x.length; i++) {
-      x.push({ x: i, y: data.x[i - 1] });
-      y.push({ x: i, y: data.y[i - 1] });
-      z.push({ x: i, y: data.z[i - 1] });
+    const accx: { x: number; y: number }[] = [];
+    const accy: { x: number; y: number }[] = [];
+    const accz: { x: number; y: number }[] = [];
+    const magx: { x: number; y: number }[] = [];
+    const magy: { x: number; y: number }[] = [];
+    const magz: { x: number; y: number }[] = [];
+    for (let i = 1; i < data.accx.length; i++) {
+      accx.push({ x: i, y: data.accx[i - 1] });
+      accy.push({ x: i, y: data.accy[i - 1] });
+      accz.push({ x: i, y: data.accz[i - 1] });
+      magx.push({ x: i, y: data.magx[i - 1] });
+      magy.push({ x: i, y: data.magy[i - 1] });
+      magz.push({ x: i, y: data.magz[i - 1] });
     }
     return {
       type: 'line',
@@ -99,7 +112,7 @@
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 0,
-            data: x,
+            data: accx,
           },
           {
             label: 'y',
@@ -107,7 +120,7 @@
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 0,
-            data: y,
+            data: accy,
           },
           {
             label: 'z',
@@ -115,7 +128,31 @@
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 0,
-            data: z,
+            data: accz,
+          },
+          {
+            label: 'x\'',
+            borderColor: 'yellow',
+            borderWidth: 1,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            data: magx,
+          },
+          {
+            label: 'z',
+            borderColor: 'turquoise',
+            borderWidth: 1,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            data: magy,
+          },
+          {
+            label: 'z',
+            borderColor: 'magenta',
+            borderWidth: 1,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            data: magz,
           },
         ],
       },
@@ -131,7 +168,7 @@
           x: {
             type: 'linear',
             min: 0,
-            max: data.x.length,
+            max: data.accx.length,
             grid: {
               color: '#f3f3f3',
             },

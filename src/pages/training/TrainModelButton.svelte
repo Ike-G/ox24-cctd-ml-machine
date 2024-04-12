@@ -18,6 +18,10 @@
   import MLModel from '../../script/domain/MLModel';
   import { Feature, hasFeature } from '../../script/FeatureToggles';
   import StandardButton from '../../components/buttons/StandardButton.svelte';
+  import { LossTrainingIteration } from '../../components/graphs/LossGraphUtil';
+
+  export let onTrainingIteration: (iteration: LossTrainingIteration) => void;
+  export let onClick: () => void;
 
   type ModelEntry = {
     id: string;
@@ -32,7 +36,9 @@
       title: 'Neural network',
       label: 'neural network',
       trainer: () =>
-        new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings),
+        new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings, h => {
+          onTrainingIteration(h);
+        }),
     },
     {
       id: 'KNN',
@@ -84,10 +90,11 @@
     'prefferedModel',
   );
 
-  const onClick = () => {
+  const clickHandler = () => {
     const selectedModel = availableModels.find(model => model.id === $selectedOption.id);
 
     if (selectedModel) {
+      onClick();
       model.train(selectedModel.trainer());
     }
   };
@@ -106,7 +113,7 @@
 
 {#if hasFeature(Feature.KNN_MODEL)}
   <StandardDropdownButton
-    {onClick}
+    onClick={clickHandler}
     {onSelect}
     buttonText={$t(trainButtonLabel, {
       values: { model: getModelFromOption($selectedOption).label },
@@ -114,7 +121,7 @@
     defaultOptionSelected={$selectedOption}
     {options} />
 {:else}
-  <StandardButton {onClick}>
+  <StandardButton onClick={clickHandler}>
     {$t(trainButtonSimpleLabel)}
   </StandardButton>
 {/if}
