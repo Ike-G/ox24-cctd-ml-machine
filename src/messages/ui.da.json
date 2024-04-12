@@ -123,6 +123,14 @@
   "footer.helpContent": "Når du har forbundet en micro:bit kan du live se Accelerometer-data for alle tre akser på denne graf. Prøv at bevæge din forbundende micro:bit og se, hvordan den data der produceres af bevægelserne ser ud for computeren!",
   "footer.reconnecting": "Genopretter forbindelsen. Vent venligst",
 
+  "menu.sensors.helpHeading": "NEEDS TRANSLATION: Sensors",
+  "menu.sensors.helpBody": "NEEDS TRANSLATION: the sensors to use for training",
+  
+  "content.sensors.accelerometerTitle": "NEEDS TRANSLATION: Accelerometer",
+  "content.sensors.accelerometer": "NEEDS TRANSLATION: Collects acceleration data from the micro:bit",
+  "content.sensors.magnetometerTitle": "NEEDS TRANSLATION: Magnetometer",
+  "content.sensors.magnetometer": "NEEDS TRANSLATION: Collects magnetic field strength data from the micro:bit",
+
   "menu.data.helpHeading": "Data",
   "menu.data.helpBody": "For at træne en model til at genkende forskellige bevægelser, skal vi have gode eksempler på 'god opførsel', som vi kan vise træneren. Her kan i oprette klasser (en type bevægelse) og optage eksempler til hver klasse. Der skal være mindst 2 klasser med hver 3 eksempler før træneren kan træne en model.",
   "menu.data.examples": "eksempler",
