@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: MIT
  */
-import { SensorChoices } from '../SensorChoice';
+import { SensorChoices } from '../sensors/SensorChoice';
 import Filters from './Filters';
 
 interface ClassifierInput {

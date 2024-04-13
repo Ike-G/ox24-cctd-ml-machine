@@ -5,7 +5,7 @@
  */
 import ClassifierInput from '../domain/ClassifierInput';
 import Filters from '../domain/Filters';
-import { SensorChoices } from '../SensorChoice';
+import { SensorChoices } from '../sensors/SensorChoice';
 
 class AccelerometerClassifierInput implements ClassifierInput {
   constructor(

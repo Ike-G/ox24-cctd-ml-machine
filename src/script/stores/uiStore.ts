@@ -15,6 +15,7 @@ import CookieManager from '../CookieManager';
 import { isInputPatternValid } from './connectionStore';
 import { classifier } from './Stores';
 import Gesture from '../domain/stores/gesture/Gesture';
+import { SensorChoices } from '../sensors/SensorChoice';
 
 let text: (key: string, vars?: object) => string;
 t.subscribe(t => (text = t));
@@ -22,6 +23,7 @@ t.subscribe(t => (text = t));
 export const compatibility: CompatibilityStatus = checkCompatibility();
 
 export const chosenGesture = writable<Gesture | null>(null);
+export const selectedSensors = writable<SensorChoices | null>(null);
 
 export const isBluetoothWarningDialogOpen = writable<boolean>(!compatibility.bluetooth);
 

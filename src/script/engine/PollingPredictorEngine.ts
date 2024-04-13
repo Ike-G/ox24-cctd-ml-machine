@@ -13,7 +13,7 @@ import Engine, { EngineData } from '../domain/stores/Engine';
 import Classifier from '../domain/stores/Classifier';
 import LiveData from '../domain/stores/LiveData';
 import GeneralClassifierInput from '../mlmodels/GeneralClassifierInput';
-import { sensorChoiceKeys } from '../SensorChoice';
+import { sensorChoiceKeys } from '../sensors/SensorChoice';
 
 class PollingPredictorEngine implements Engine {
   private pollingInterval: ReturnType<typeof setInterval> | undefined;

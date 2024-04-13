@@ -15,7 +15,7 @@ import {
 import { TrainerConsumer } from '../../repository/LocalStorageClassifierRepository';
 import MLModel from '../MLModel';
 import ModelTrainer from '../ModelTrainer';
-import { SensorChoices } from '../../SensorChoice';
+import { SensorChoices } from '../../sensors/SensorChoice';
 
 export enum TrainingStatus {
   Untrained,
@@ -59,7 +59,7 @@ class Model implements Readable<ModelData> {
       return state;
     });
     try {
-      await this.trainerConsumer(modelTrainer);
+      await this.trainerConsumer(modelTrainer); // Pass the current state of chosenSensors here
       this.modelData.update(state => {
         state.trainingStatus = TrainingStatus.Success;
         return state;

@@ -12,7 +12,7 @@ import { TrainerConsumer } from '../repository/LocalStorageClassifierRepository'
 import Gesture, { GestureID } from './stores/gesture/Gesture';
 import Model from './stores/Model';
 import { RecordingData } from './stores/gesture/Gestures';
-import { SensorChoices, sensorChoiceKeys } from '../SensorChoice';
+import { SensorChoices, sensorChoiceKeys } from '../sensors/SensorChoice';
 
 class ClassifierFactory {
   public buildClassifier(

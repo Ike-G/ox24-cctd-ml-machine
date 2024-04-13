@@ -6,7 +6,7 @@
 import LocalStorageGestureRepository from './LocalStorageGestureRepository';
 import LocalStorageClassifierRepository from './LocalStorageClassifierRepository';
 import Repositories from '../domain/Repositories';
-import { SensorChoices } from '../SensorChoice'; // TEMPORARY ARGUMENT
+import { SensorChoices } from '../sensors/SensorChoice'; // TEMPORARY ARGUMENT
 
 class LocalStorageRepositories implements Repositories {
   private gestureRepository: LocalStorageGestureRepository;

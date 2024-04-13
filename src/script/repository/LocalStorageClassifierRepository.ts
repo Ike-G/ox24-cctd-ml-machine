@@ -17,7 +17,7 @@ import ClassifierRepository from '../domain/ClassifierRepository';
 import Gesture, { GestureID } from '../domain/stores/gesture/Gesture';
 import Classifier from '../domain/stores/Classifier';
 import GestureConfidence from '../domain/stores/gesture/GestureConfidence';
-import { SensorChoices } from '../SensorChoice';
+import { SensorChoices } from '../sensors/SensorChoice';
 
 export type TrainerConsumer = <T extends MLModel>(
   trainer: ModelTrainer<T>,

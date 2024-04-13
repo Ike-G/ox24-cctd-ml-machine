@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 export enum SensorChoices {
    ACCEL,
    MAGNET,

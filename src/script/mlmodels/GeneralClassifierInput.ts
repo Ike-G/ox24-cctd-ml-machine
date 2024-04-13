@@ -1,6 +1,6 @@
 import ClassifierInput from '../domain/ClassifierInput';
 import Filters from '../domain/Filters';
-import { SensorChoices, sensorChoiceKeys } from '../SensorChoice';
+import { SensorChoices, sensorChoiceKeys } from '../sensors/SensorChoice';
 
 class GeneralClassifierInput implements ClassifierInput {
   constructor(
