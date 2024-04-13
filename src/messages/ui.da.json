@@ -47,6 +47,7 @@
   "content.data.dataDescription": "Her kan du se din indsamlede data. Generelt vil det være en fordel at have mere data, da dette giver lærings-algoritmen mere infomration at lære ud fra.",
   "content.data.addDataNoConnection": "Du kan ikke tilføje data, uden at være tilsluttet en micro:bit",
   "content.data.noData": "Du har ingen bevægelser at træne med. Tilføj nogle bevægelser, som du vil træne din BBC micro:bit til at genkende.",
+  "content.data.noSensors": "TRANSLATION NEEDED: No sensors have been selected. You must enable at least 1 sensor in order to record data.",
 
   "content.data.controlbar.button.clearData": "Ryd eksempler",
   "content.data.controlbar.button.clearData.confirm": "Er du sikker på at du vil slette alle eksempler?\nDette kan ikke fortrydes.",
@@ -130,10 +131,12 @@
   "content.sensors.accelerometer": "NEEDS TRANSLATION: Collects acceleration data from the micro:bit",
   "content.sensors.magnetometerTitle": "NEEDS TRANSLATION: Magnetometer",
   "content.sensors.magnetometer": "NEEDS TRANSLATION: Collects magnetic field strength data from the micro:bit",
+  "content.sensors.alreadyTrained": "NEEDS TRANSLATION: Model has already been trained",
 
   "menu.data.helpHeading": "Data",
   "menu.data.helpBody": "For at træne en model til at genkende forskellige bevægelser, skal vi have gode eksempler på 'god opførsel', som vi kan vise træneren. Her kan i oprette klasser (en type bevægelse) og optage eksempler til hver klasse. Der skal være mindst 2 klasser med hver 3 eksempler før træneren kan træne en model.",
   "menu.data.examples": "eksempler",
+  "menu.data.noSensors": "NEEDS TRANSLATION: No sensors assigned",
 
   "menu.trainer.helpHeading": "Træner",
   "menu.trainer.helpBody": "Træneren kigger på eksemplerne i klasserne og forsøger at 'lære', hvordan de forskellige klasser kan genkendes ved at finde mønstre i dataet. Her kan i træne en model, der kan genkende forskellige bevægelser.",

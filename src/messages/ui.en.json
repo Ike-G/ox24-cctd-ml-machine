@@ -48,6 +48,7 @@
   "content.data.dataDescription": "Here you can see the gathered data. ",
   "content.data.addDataNoConnection": "You cannot add data without being connected with a micro:bit",
   "content.data.noData": "You do not have any gestures to train on. Add the gestures you wish the micro:bit should learn to recognise.",
+  "content.data.noSensors": "No sensors have been selected. You must enable at least 1 sensor in order to record data.",
 
   "content.data.controlbar.button.clearData": "Clear examples",
   "content.data.controlbar.button.clearData.confirm": "Are you sure you wish to delete all gesture examples?\nThis cannot be undone.",
@@ -131,17 +132,19 @@
   "content.sensors.accelerometer": "Collects acceleration data from the micro:bit",
   "content.sensors.magnetometerTitle": "Magnetometer",
   "content.sensors.magnetometer": "Collects magnetic field strength data from the micro:bit",
+  "content.sensors.alreadyTrained": "The model has already been trained.",
 
   "menu.data.helpHeading": "Data",
   "menu.data.helpBody": "In order to train a model to recognize different movements, we need good examples of 'good behavior' that we can show the Trainer. Here you can create classes (types of gestures) and record examples for each class. There must be at least 2 classes with 3 examples each before the trainer can train a model.",
   "menu.data.examples": "examples",
+  "menu.data.noSensors": "No sensors assigned",
 
   "menu.trainer.helpHeading": "Trainer",
   "menu.trainer.helpBody": "The Trainer looks at the examples in each of the classes and tries to 'learn' how the different classes can be recognized by searching for patterns in the data. Here you can train a model to recognize different gestures.",
   "menu.trainer.notConnected1": "You have not connected a micro:bit.",
   "menu.trainer.notConnected2": " Please do so via the button below",
   "menu.trainer.notEnoughDataHeader1": "Not Enough Data\nGo to Data page",
-  "menu.trainer.notEnoughDataInfoBody": "You need at least 2 classes with 3 examples each to attempt to train a model.",
+  "menu.trainer.notEnoughDataInfoBody": "You need at least 2 classes, all with at least 3 examples each, to attempt to train a model.",
   "menu.trainer.notEnoughDataInfo": "You have not collected enough data to train a model. You need at least 2 classes with 3 examples each. Please go to the Data page to collect more data",
   "menu.trainer.trainModelButtonSimple": "Train model",
   "menu.trainer.trainNewModelButtonSimple": "Train new model",

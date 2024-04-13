@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: MIT
  */
+import SensorChoice from '../sensors/SensorChoice';
 import MLModel from './MLModel';
 
 export type TrainingData = {

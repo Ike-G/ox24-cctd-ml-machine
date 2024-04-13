@@ -19,9 +19,10 @@ import Classifier from '../domain/stores/Classifier';
 import Engine from '../domain/stores/Engine';
 import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
-import { SensorChoices } from '../sensors/SensorChoice';
+import SensorChoice from '../sensors/SensorChoice';
+import { sensorChoice } from '../../pages/sensors/SensorPage.svelte';
 
-const repositories: Repositories = new LocalStorageRepositories(SensorChoices.MAGNET);
+const repositories: Repositories = new LocalStorageRepositories();
 
 const gestures: Gestures = new Gestures(repositories.getGestureRepository());
 // Builds a classifier, which wraps the model so as to deal with updating gestures / filters
@@ -59,4 +60,5 @@ export {
   liveAccelerometerData,
   liveMagnetometerData,
   liveCombinedData,
+  sensorChoice,
 };

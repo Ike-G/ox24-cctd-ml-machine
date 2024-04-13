@@ -17,6 +17,17 @@
     PointElement,
   } from 'chart.js';
   import RecordingInspector from '../3d-inspector/RecordingInspector.svelte';
+  import { sensorChoice } from '../../script/stores/Stores';
+  import { get } from 'svelte/store';
+
+  const sensorKeys = get(sensorChoice).choiceKeys() as (keyof {
+    accx: number[];
+    accy: number[];
+    accz: number[];
+    magx: number[];
+    magy: number[];
+    magz: number[];
+  })[];
 
   export let data: {
     accx: number[];
@@ -34,14 +45,15 @@
   const verticalLineCol = 'black';
   const verticalLineWidth = 1;
 
+  // TODO: currently deals only with the first 3 dimensions actively being used, need to make more explicit / change
   const getDataByIndex = (index: number) => {
     if (isNaN(index)) {
       return { x: 0, y: 0, z: 0 };
     }
     return {
-      x: data.accx[index],
-      y: data.accy[index],
-      z: data.accz[index],
+      x: data[sensorKeys[0]][index],
+      y: data[sensorKeys[1]][index],
+      z: data[sensorKeys[2]][index],
     };
   };
 
@@ -88,73 +100,30 @@
     { x: number; y: number }[],
     string
   > {
-    const accx: { x: number; y: number }[] = [];
-    const accy: { x: number; y: number }[] = [];
-    const accz: { x: number; y: number }[] = [];
-    const magx: { x: number; y: number }[] = [];
-    const magy: { x: number; y: number }[] = [];
-    const magz: { x: number; y: number }[] = [];
+    const labels = ['x', 'y', 'z', "x'", "y'", "z'"];
+    const colours = {accx: 'red', accy: 'green', accz: 'blue', magx: 'orange', magy: 'turquoise', magz: 'magenta'};
+    const recording: { x: number; y: number }[][] = [];
+    for (let i = 0; i < sensorKeys.length; i++) {
+      recording[i] = [];
+    }
     for (let i = 1; i < data.accx.length; i++) {
-      accx.push({ x: i, y: data.accx[i - 1] });
-      accy.push({ x: i, y: data.accy[i - 1] });
-      accz.push({ x: i, y: data.accz[i - 1] });
-      magx.push({ x: i, y: data.magx[i - 1] });
-      magy.push({ x: i, y: data.magy[i - 1] });
-      magz.push({ x: i, y: data.magz[i - 1] });
+      for (let j = 0; j < sensorKeys.length; j++) {
+        recording[j].push({ x: i, y: data[sensorKeys[j]][i - 1] });
+      }
     }
     return {
       type: 'line',
       data: {
-        datasets: [
-          {
-            label: 'x',
-            borderColor: 'red',
+        datasets: Array.from(Array(sensorKeys.length).keys()).map((idx) => {
+          return {
+            label: labels[idx],
+            borderColor: colours[sensorKeys[idx]],
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 0,
-            data: accx,
-          },
-          {
-            label: 'y',
-            borderColor: 'green',
-            borderWidth: 1,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            data: accy,
-          },
-          {
-            label: 'z',
-            borderColor: 'blue',
-            borderWidth: 1,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            data: accz,
-          },
-          {
-            label: 'x\'',
-            borderColor: 'yellow',
-            borderWidth: 1,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            data: magx,
-          },
-          {
-            label: 'z',
-            borderColor: 'turquoise',
-            borderWidth: 1,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            data: magy,
-          },
-          {
-            label: 'z',
-            borderColor: 'magenta',
-            borderWidth: 1,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            data: magz,
-          },
-        ],
+            data: recording[idx],
+          };
+        }),
       },
       options: {
         responsive: true,
@@ -257,6 +226,7 @@
 </script>
 
 <div bind:this={htmlElement} class="h-full w-full relative">
+  <!--<p>HI {$sensorChoice.choiceKeys().length}</p>-->
   <div class="z-1 h-full w-full absolute">
     {#if !isNaN(hoverIndex)}
       <p

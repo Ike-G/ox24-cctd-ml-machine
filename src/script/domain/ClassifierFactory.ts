@@ -12,7 +12,7 @@ import { TrainerConsumer } from '../repository/LocalStorageClassifierRepository'
 import Gesture, { GestureID } from './stores/gesture/Gesture';
 import Model from './stores/Model';
 import { RecordingData } from './stores/gesture/Gestures';
-import { SensorChoices, sensorChoiceKeys } from '../sensors/SensorChoice';
+import SensorChoice from '../sensors/SensorChoice';
 
 class ClassifierFactory {
   public buildClassifier(
@@ -21,10 +21,9 @@ class ClassifierFactory {
     filters: Filters,
     gestures: Readable<Gesture[]>,
     confidenceSetter: (gestureId: GestureID, confidence: number) => void,
-    sensors: SensorChoices,
   ): Classifier {
     const classifier = new Classifier(
-      this.buildModel(trainerConsumer, model, sensors),
+      this.buildModel(trainerConsumer, model),
       filters,
       gestures,
       confidenceSetter,
@@ -49,7 +48,7 @@ class ClassifierFactory {
   public buildTrainingData(
     gestures: Gesture[],
     filters: Filters,
-    sensors: SensorChoices,
+    sensors: SensorChoice,
   ): TrainingData {
     const classes = gestures.map(gesture => {
       return {
@@ -65,21 +64,20 @@ class ClassifierFactory {
   private buildModel(
     trainerConsumer: TrainerConsumer,
     mlModel: Writable<MLModel | undefined>,
-    sensors: SensorChoices,
   ): Model {
-    const model = new Model(trainerConsumer, mlModel, sensors);
+    const model = new Model(trainerConsumer, mlModel);
     return model;
   }
 
   private buildFilteredSamples(
     recordings: RecordingData[],
     filters: Filters,
-    sensors: SensorChoices,
+    sensors: SensorChoice,
   ) {
     return recordings.map(recording => {
       const data = recording.data;
       return {
-        value: (sensorChoiceKeys(sensors) as (keyof typeof data)[]).reduce(
+        value: (sensors.choiceKeys() as (keyof typeof data)[]).reduce(
           (fxs: number[], sensor: keyof typeof data) => {
             return fxs.concat(filters.compute(data[sensor]));
           },

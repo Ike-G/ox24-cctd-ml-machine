@@ -1,6 +1,8 @@
 import ClassifierInput from '../domain/ClassifierInput';
 import Filters from '../domain/Filters';
 import { SensorChoices, sensorChoiceKeys } from '../sensors/SensorChoice';
+import { sensorChoice } from '../stores/Stores';
+import SensorChoice from '../sensors/SensorChoice';
 
 class GeneralClassifierInput implements ClassifierInput {
   constructor(
@@ -15,8 +17,8 @@ class GeneralClassifierInput implements ClassifierInput {
   ) {}
 
   // Reconsider whether to have this class include sensors in the argument or more widely
-  getInput(filters: Filters, sensors: SensorChoices): number[] {
-    return (sensorChoiceKeys(sensors) as (keyof typeof this.record)[]).reduce(
+  getInput(filters: Filters, sensors: SensorChoice): number[] {
+    return (sensors.choiceKeys() as (keyof typeof this.record)[]).reduce(
       (fxs: number[], sensor: keyof typeof this.record) =>
         fxs.concat(filters.compute(this.record[sensor])),
       [],

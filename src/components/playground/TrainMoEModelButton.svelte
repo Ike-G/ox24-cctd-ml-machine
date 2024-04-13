@@ -2,14 +2,14 @@
   import StaticConfiguration from '../../StaticConfiguration';
   import Model from '../../script/domain/stores/Model';
   import MoEModelTrainer from '../../script/mlmodels/MoEModelTrainer';
-  import { classifier } from '../../script/stores/Stores';
+  import { classifier, sensorChoice } from '../../script/stores/Stores';
   import playgroundContext from './PlaygroundContext';
 
   const model: Model = classifier.getModel();
   const trainModelButtonClicked = () => {
     playgroundContext.addMessage('training model...');
     model
-      .train(new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings))
+      .train(new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings), $sensorChoice)
       .then(() => {
         playgroundContext.addMessage('Finished training!');
       });

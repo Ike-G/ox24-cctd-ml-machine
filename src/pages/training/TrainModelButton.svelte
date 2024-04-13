@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import { t } from '../../i18n';
-  import { classifier } from '../../script/stores/Stores';
+  import { classifier, sensorChoice } from '../../script/stores/Stores';
   import LayersModelTrainer from '../../script/mlmodels/LayersModelTrainer';
   import MoEModelTrainer from '../../script/mlmodels/MoEModelTrainer';
   import StaticConfiguration from '../../StaticConfiguration';
@@ -95,7 +95,7 @@
 
     if (selectedModel) {
       onClick();
-      model.train(selectedModel.trainer());
+      model.train(selectedModel.trainer(), $sensorChoice);
     }
   };
 

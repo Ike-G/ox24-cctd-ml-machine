@@ -6,14 +6,14 @@
 <script lang="ts">
   import Model from '../../script/domain/stores/Model';
   import KNNModelTrainer from '../../script/mlmodels/KNNModelTrainer';
-  import { classifier } from '../../script/stores/Stores';
+  import { classifier, sensorChoice } from '../../script/stores/Stores';
   import playgroundContext from './PlaygroundContext';
 
   const model: Model = classifier.getModel();
   const trainModelButtonClicked = () => {
     playgroundContext.addMessage('training model...');
     const k = 10;
-    model.train(new KNNModelTrainer(k)).then(() => {
+    model.train(new KNNModelTrainer(k), $sensorChoice).then(() => {
       playgroundContext.addMessage('Finished training a KNN model (k=10)!');
     });
   };
