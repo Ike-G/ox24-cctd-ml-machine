@@ -18,11 +18,14 @@ function applyGatingNetwork(
   numExperts: number,
 ){
   const first = tf.layers.batchNormalization().apply(input);
-  const second = tf.layers.dense({ units: numUnits, activation: 'relu' }).apply(first);
-  return tf.layers
+  const second = tf.layers.dense({ units: 8, activation: 'relu' }).apply(first);
+  //dropout to prevent one expert being over trained
+  const third = tf.layers.dropout({rate:0.25}).apply(second);
+  const last = tf.layers
     //softmax to give probability distribution of which expert is the best choice
     .dense({ units: numExperts, activation: 'softmax' })
-    .apply(second) as tf.Tensor<tf.Rank>
+    .apply(third) as tf.Tensor<tf.Rank>
+  return last
 }
 
 function applyExpertNetwork(
@@ -70,6 +73,8 @@ class GatingMultiplier extends tf.layers.Layer {
     
       var ret = tf.sum(tf.stack(weightedSums), 0);
       ret = ret.reshape([1,numClasses])
+      //normalize confidences and apply temperature
+      //const mag = tf.mul(tf.norm(ret), 2)
       //normalize confidences
       const mag = tf.norm(ret)
       ret = ret.div(mag)
@@ -140,26 +145,6 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
 
     const moeModel = tf.model({ inputs: input, outputs: output});
 
-    /*
-    class AccuracyLogger extends tf.CustomCallback {
-      constructor() {
-        super({});
-      }
-
-      async onEpochEnd(epoch: number, logs: tf.Logs) {
-        const accuracy = logs["loss"] as number; 
-        const totalTests = logs["mean_absolute_error"] as number; 
-        console.log(accuracy);
-
-        if (!isNaN(accuracy) && !isNaN(totalTests) && totalTests !== undefined) {
-          const passedTests = Math.round(totalTests * accuracy); // Number of tests passed
-          console.log(`Epoch ${epoch}: ${passedTests} out of ${totalTests} tests passed`);
-        } else {
-          console.warn(`Epoch ${epoch}: Accuracy or total tests is NaN or undefined`);
-        }
-      }
-    }*/
-
     // Compile the MoE model
     moeModel.compile({
       loss: 'categoricalCrossentropy',
@@ -167,15 +152,12 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
       metrics: ['accuracy'],
     });
 
-    //const accuracyLogger = new AccuracyLogger();
-
     // Train the MoE model
     const history = await moeModel
       .fit(tensorFeatures, tensorLabels, {
         epochs: this.settings.noOfEpochs,
         batchSize: this.settings.batchSize,
         validationSplit: this.settings.validationSplit,
-        /*callbacks: [accuracyLogger],*/
       })
       .catch(err => {
         console.error('TensorFlow training process failed:', err);

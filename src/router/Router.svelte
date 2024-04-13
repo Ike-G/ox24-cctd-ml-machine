@@ -14,6 +14,7 @@
   import PlaygroundPage from '../pages/PlaygroundPage.svelte';
   import { currentPageComponent } from '../views/currentComponentStore';
   import { currentPath, navigate, Paths, PathType } from './paths';
+  import SensorsPage from '../pages/sensors/SensorPage.svelte';
 
   function getRoutedComponent(path: PathType) {
     switch (path) {
@@ -21,6 +22,8 @@
         return Homepage;
       case Paths.PLAYGROUND:
         return PlaygroundPage;
+      case Paths.SENSORS:
+        return SensorsPage;
       case Paths.DATA:
         return DataPage;
       case Paths.TRAINING:

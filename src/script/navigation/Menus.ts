@@ -6,6 +6,7 @@
 
 import { SvelteComponent } from 'svelte';
 import { writable } from 'svelte/store';
+import SensorsMenu from '../../menus/SensorsMenu.svelte';
 import GestureMenu from '../../menus/DataMenu.svelte';
 import NewTrainerMenu from '../../menus/TrainingMenu.svelte';
 import NewModelMenu from '../../menus/ModelMenu.svelte';
@@ -26,6 +27,14 @@ export type MenuProperties = {
  */
 class Menus {
   private static menuStore = writable<MenuProperties[]>([
+    {
+      title: 'menu.sensors.helpHeading',
+      infoBubbleTitle: 'menu.sensors.helpHeading',
+      infoBubbleContent: 'menu.sensors.helpBody',
+      collapsedButtonContent: undefined,
+      expandedButtonContent: SensorsMenu,
+      navigationPath: Paths.SENSORS,
+    },
     {
       title: 'menu.data.helpHeading',
       infoBubbleTitle: 'menu.data.helpHeading',
