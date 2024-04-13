@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: MIT
  */
 import ModelTrainer, { TrainingData } from '../../../script/domain/ModelTrainer';
-import SensorChoice from '../../../script/sensors/SensorChoice';
 import TestMLModel from './TestMLModel';
 
 class TestMLModelTrainer implements ModelTrainer<TestMLModel> {
