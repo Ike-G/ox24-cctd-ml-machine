@@ -64,7 +64,7 @@ class StaticConfiguration {
     '#f9808e',
     '#80f98e',
     '#808ef9',
-    '#fad16c',
+    '#eb8634',
     '#4cfaee',
     '#fa4cfa',
   ];

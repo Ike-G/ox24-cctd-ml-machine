@@ -9,6 +9,7 @@
     liveAccelerometerData,
     gestures,
     engine,
+    sensorChoice,
   } from '../../script/stores/Stores';
   import PlaygroundGestureView from './PlaygroundGestureView.svelte';
 
@@ -16,6 +17,15 @@
 </script>
 
 <div class="flex flex-col flex-shrink">
+  <div>
+    <p class="text-2xl mt-2">Selected sensors</p>
+    <p class="whitespace-pre">
+      {JSON.stringify($sensorChoice, null, 2).substring(
+        2,
+        JSON.stringify($sensorChoice,null, 2).length - 1,
+      )}
+    </p>
+  </div>
   <div>
     <p class="text-2xl mt-2">Model store</p>
     <p class="whitespace-pre">

@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: MIT
  */
-import { SensorChoices } from '../SensorChoice';
+import SensorChoice from '../sensors/SensorChoice';
 import Filters from './Filters';
 
 interface ClassifierInput {
-  getInput(filters: Filters, sensors: SensorChoices): number[];
+  getInput(filters: Filters, sensors: SensorChoice): number[];
 }
 
 export default ClassifierInput;

@@ -19,15 +19,16 @@ import Classifier from '../domain/stores/Classifier';
 import Engine from '../domain/stores/Engine';
 import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
-import { SensorChoices } from '../SensorChoice';
+import SensorChoice from '../sensors/SensorChoice';
+import { sensorChoice } from '../../pages/sensors/SensorPage.svelte';
 
-// Want to do:
-// Store a selection here indicating the sensors being used
-// Repositories constructed to
-
-const repositories: Repositories = new LocalStorageRepositories(SensorChoices.MAGNET);
+const repositories: Repositories = new LocalStorageRepositories();
 
 const gestures: Gestures = new Gestures(repositories.getGestureRepository());
+// Builds a classifier, which wraps the model so as to deal with updating gestures / filters
+// Model itself wraps both mlModel (which provides the .predict(data) interface), and the training procedure
+// We want to specify sensors at the training level, and have that carry over to each prediction.
+// ATTEMPT 1: Doing this by modifying trainModel 
 const classifier: Classifier = repositories.getClassifierRepository().getClassifier();
 
 const accelerometerDataBuffer = new LiveDataBuffer<MicrobitAccelerometerData>(
@@ -59,4 +60,5 @@ export {
   liveAccelerometerData,
   liveMagnetometerData,
   liveCombinedData,
+  sensorChoice,
 };

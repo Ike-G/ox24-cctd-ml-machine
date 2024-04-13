@@ -8,6 +8,7 @@
   import {
     liveAccelerometerData,
     liveMagnetometerData,
+    liveCombinedData,
   } from '../../script/stores/Stores';
 
   let utilization = 0;

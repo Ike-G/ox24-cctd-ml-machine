@@ -14,7 +14,8 @@
   import FilterGraphLimits from '../../script/utils/FilterLimits';
   import { GestureData } from '../../script/domain/stores/gesture/Gesture';
   import { RecordingData } from '../../script/domain/stores/gesture/Gestures';
-    import StaticConfiguration from '../../StaticConfiguration';
+  import StaticConfiguration from '../../StaticConfiguration';
+  import { sensorChoice } from '../../script/stores/Stores';
 
   export let filterType: FilterType;
   export let fullScreen: boolean = false;
@@ -52,7 +53,7 @@
   let plotDrawn = false;
 
   // Scalars to built graph and insert data in graph
-  const dimensions: Axis[] = ['accx', 'accy', 'accz', 'magx', 'magy', 'magz']; // TODO: allow this to vary
+  const dimensions: Axis[] = get(sensorChoice).choiceKeys() as Axis[]
   const { min, max } = FilterGraphLimits.getFilterLimits(filter);
   const xScalar: d3.ScalePoint<string> = d3
     .scalePoint()
@@ -271,9 +272,9 @@
       // Add axis title
       .append('text')
       .style('text-anchor', 'middle')
-      .style('font-size', '14px')
+      .style('font-size', '16px')
       .style('fill', function (axis: Axis) {
-        return StaticConfiguration.liveGraphColors[dimensions.indexOf(axis)];
+        return StaticConfiguration.liveGraphColors[['accx','accy','accz','magx','magy','magz'].indexOf(axis)];
       })
       .attr('y', -9)
       .text(function (axis: Axis) {

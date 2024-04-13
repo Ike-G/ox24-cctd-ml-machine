@@ -7,7 +7,7 @@
   import StaticConfiguration from '../../StaticConfiguration';
   import Model from '../../script/domain/stores/Model';
   import LayersModelTrainer from '../../script/mlmodels/LayersModelTrainer';
-  import { classifier } from '../../script/stores/Stores';
+  import { classifier, sensorChoice } from '../../script/stores/Stores';
   import playgroundContext from './PlaygroundContext';
 
   const model: Model = classifier.getModel();
@@ -16,6 +16,7 @@
     model
       .train(
         new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings, () => {}),
+        $sensorChoice,
       )
       .then(() => {
         playgroundContext.addMessage('Finished training!');

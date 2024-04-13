@@ -23,6 +23,7 @@
   import { get } from 'svelte/store';
   import exampleDataset from '../exampleDataset.json';
   import { GestureData } from '../script/domain/stores/gesture/Gesture';
+  import { sensorChoice } from '../script/stores/Stores';
 
   let isConnectionDialogOpen = false;
 
@@ -79,6 +80,13 @@
 
 <!-- Main pane -->
 <main class="h-full inline-block min-w-full flex flex-col">
+  {#if !$sensorChoice.validChoice()}
+  <div class="absolute z-10 w-full h-full bg-opacity-50 bg-white-500 backdrop-filter backdrop-blur-sm">
+    <div class="flex flex-col h-full justify-center">
+      <p class="w-2/3 text-center text-2xl bold m-auto">{$t('content.data.noSensors')}</p>
+    </div>
+  </div>
+  {/if}
   <div>
     <DataPageControlBar
       clearDisabled={$gestures.length === 0}

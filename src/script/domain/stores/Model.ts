@@ -15,7 +15,7 @@ import {
 import { TrainerConsumer } from '../../repository/LocalStorageClassifierRepository';
 import MLModel from '../MLModel';
 import ModelTrainer from '../ModelTrainer';
-import { SensorChoices } from '../../SensorChoice';
+import SensorChoice from '../../sensors/SensorChoice';
 
 export enum TrainingStatus {
   Untrained,
@@ -30,7 +30,7 @@ export enum ModelType {
 
 type BaseModelData = {
   trainingStatus: TrainingStatus;
-  sensors: SensorChoices;
+  sensors: SensorChoice;
 };
 
 export type ModelData = {
@@ -45,23 +45,23 @@ class Model implements Readable<ModelData> {
   constructor(
     private trainerConsumer: TrainerConsumer,
     private mlModel: Readable<MLModel | undefined>,
-    sensorChoices: SensorChoices,
   ) {
     this.modelData = writable({
       trainingStatus: TrainingStatus.Untrained,
-      sensors: sensorChoices,
+      sensors: new SensorChoice(false, false),
     });
   }
 
-  public async train<T extends MLModel>(modelTrainer: ModelTrainer<T>): Promise<void> {
+  public async train<T extends MLModel>(modelTrainer: ModelTrainer<T>, sensors: SensorChoice): Promise<void> {
     this.modelData.update(state => {
       state.trainingStatus = TrainingStatus.InProgress;
       return state;
     });
     try {
-      await this.trainerConsumer(modelTrainer);
+      await this.trainerConsumer(modelTrainer); // Pass the current state of chosenSensors here
       this.modelData.update(state => {
         state.trainingStatus = TrainingStatus.Success;
+        state.sensors = sensors;
         return state;
       });
     } catch (err) {
@@ -83,7 +83,7 @@ class Model implements Readable<ModelData> {
   /**
    * @returns the sensor data which the model accesses.
    */
-  public getSensors(): SensorChoices {
+  public getSensors(): SensorChoice {
     return get(this.modelData).sensors;
   }
 

@@ -61,7 +61,7 @@
     </div>
     <!-- Buttons -->
     <div class="flex">
-      <!-- maxumize button -->
+      <!-- maximize button -->
 
       <div
         class="mr-2 mt-2 cursor-pointer"

@@ -5,7 +5,7 @@
  */
 import ClassifierInput from '../domain/ClassifierInput';
 import Filters from '../domain/Filters';
-import { SensorChoices } from '../SensorChoice';
+import SensorChoice from '../sensors/SensorChoice';
 
 class AccelerometerClassifierInput implements ClassifierInput {
   constructor(
@@ -14,7 +14,7 @@ class AccelerometerClassifierInput implements ClassifierInput {
     private zs: number[],
   ) {}
 
-  getInput(filters: Filters, sensors: SensorChoices): number[] {
+  getInput(filters: Filters, sensors: SensorChoice): number[] {
     return [
       ...filters.compute(this.xs),
       ...filters.compute(this.ys),
