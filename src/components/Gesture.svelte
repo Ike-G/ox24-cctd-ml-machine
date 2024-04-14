@@ -21,7 +21,11 @@
   import ImageSkeleton from './skeletonloading/ImageSkeleton.svelte';
   import GestureTilePart from './GestureTilePart.svelte';
   import StaticConfiguration from '../StaticConfiguration';
-  import { gestures, liveAccelerometerData, liveCombinedData } from '../script/stores/Stores';
+  import {
+    gestures,
+    liveAccelerometerData,
+    liveCombinedData,
+  } from '../script/stores/Stores';
   import Gesture from '../script/domain/stores/gesture/Gesture';
   import { RecordingData } from '../script/domain/stores/gesture/Gestures';
 

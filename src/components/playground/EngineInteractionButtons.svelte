@@ -6,7 +6,7 @@
 <script lang="ts">
   import Gesture from '../../script/domain/stores/gesture/Gesture';
   import AccelerometerClassifierInput from '../../script/mlmodels/AccelerometerClassifierInput';
-    import GeneralClassifierInput from '../../script/mlmodels/GeneralClassifierInput';
+  import GeneralClassifierInput from '../../script/mlmodels/GeneralClassifierInput';
   import { classifier, engine, gestures } from '../../script/stores/Stores';
   import playgroundContext from './PlaygroundContext';
   import TrainKnnModelButton from './TrainKNNModelButton.svelte';
@@ -30,7 +30,7 @@
       magx: randGesture.getRecordings()[0].data.magx,
       magy: randGesture.getRecordings()[0].data.magy,
       magz: randGesture.getRecordings()[0].data.magz,
-    }); 
+    });
     classifier.classify(input).then(() => {
       playgroundContext.addMessage('Finished predicting');
     });
@@ -48,7 +48,7 @@
     engine.start();
   }}>Start engine!</button>
 <button
-  class="border-1 p-2 m-1 hover:(font-bold)" 
+  class="border-1 p-2 m-1 hover:(font-bold)"
   on:click={() => {
     playgroundContext.addMessage('Stopping engine');
     engine.stop();

@@ -89,6 +89,7 @@
   "content.model.trainModelFirstBody": "Gå til 'Træner'-siden",
   "content.model.classification.helpHeading": "Sandsynligheds-meteret",
   "content.model.classification.helpBody": "For hver forudsigelse, vil modellen producere et procent-tal, der beskriver hvor sikker modellen er i sin fordusigelse. Dette meter går fra 0% til 100%. Med slideren ved siden af, kan du bestemme grænsen for, hvor sikker modellen skal være i sin forudsigelse for at lave et output (fx afspille en lyd)",
+  "content.model.selectedSensors": "TRANSLATION NEEDED: The current model was trained on and is using",
   "content.model.output.soundOptionCongratulations": "Tillykke",
   "content.model.output.soundOptionHighPitchBeep": "Højtone Bip",
   "content.model.output.soundOptionLowPitchBeep": "Lavtone Bip",
@@ -126,10 +127,12 @@
 
   "menu.sensors.helpHeading": "NEEDS TRANSLATION: Sensors",
   "menu.sensors.helpBody": "NEEDS TRANSLATION: the sensors to use for training",
-  
+
   "content.sensors.accelerometerTitle": "NEEDS TRANSLATION: Accelerometer",
+  "content.sensors.accelerometerThe": "NEEDS TRANSLATION: the accelerometer",
   "content.sensors.accelerometer": "NEEDS TRANSLATION: Collects acceleration data from the micro:bit",
   "content.sensors.magnetometerTitle": "NEEDS TRANSLATION: Magnetometer",
+  "content.sensors.magnetometerThe": "NEEDS TRANSLATION: the magnetometer",
   "content.sensors.magnetometer": "NEEDS TRANSLATION: Collects magnetic field strength data from the micro:bit",
   "content.sensors.alreadyTrained": "NEEDS TRANSLATION: Model has already been trained",
 
@@ -151,6 +154,7 @@
   "menu.trainer.trainNewModelButton": "Træn en ny {model} model",
   "menu.trainer.TrainingFinished": "Træning færdig",
   "menu.trainer.TrainingFinished.body": "Gå til Model-siden for at undersøge hvor godt din model virker",
+  "menu.trainer.TrainingFinished.sensors": "NEEDS TRANSLATION: The current model was trained on",
   "menu.trainer.noFilters": "Du har ikke valgt nogle filtre. Der skal mindst være valgt 1 filter for at kunne træne en model",
   "menu.trainer.isTrainingModelButton": "Træner model...",
 

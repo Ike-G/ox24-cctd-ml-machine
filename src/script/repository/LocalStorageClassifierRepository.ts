@@ -31,7 +31,7 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
   private static persistedFilters: PersistantWritable<FilterType[]>;
   private classifierFactory: ClassifierFactory;
 
-  constructor() { 
+  constructor() {
     const initialConfidence = new Map<GestureID, number>();
     LocalStorageClassifierRepository.confidences = writable(initialConfidence);
     LocalStorageClassifierRepository.mlModel = writable(undefined);
@@ -41,7 +41,6 @@ class LocalStorageClassifierRepository implements ClassifierRepository {
     );
     LocalStorageClassifierRepository.filters = new Filters(this.getFilters());
     this.classifierFactory = new ClassifierFactory();
-
   }
 
   public getClassifier(): Classifier {

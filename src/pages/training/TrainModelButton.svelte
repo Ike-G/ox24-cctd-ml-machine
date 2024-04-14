@@ -50,8 +50,7 @@
       id: 'MoE',
       title: 'Mixture of Experts',
       label: 'mixture of experts',
-      trainer: () =>
-        new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings),
+      trainer: () => new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings),
     },
   ];
 

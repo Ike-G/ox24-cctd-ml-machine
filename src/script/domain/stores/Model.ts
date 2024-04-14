@@ -52,7 +52,10 @@ class Model implements Readable<ModelData> {
     });
   }
 
-  public async train<T extends MLModel>(modelTrainer: ModelTrainer<T>, sensors: SensorChoice): Promise<void> {
+  public async train<T extends MLModel>(
+    modelTrainer: ModelTrainer<T>,
+    sensors: SensorChoice,
+  ): Promise<void> {
     this.modelData.update(state => {
       state.trainingStatus = TrainingStatus.InProgress;
       return state;

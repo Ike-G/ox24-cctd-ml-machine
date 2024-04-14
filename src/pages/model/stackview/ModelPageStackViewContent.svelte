@@ -7,9 +7,10 @@
   import { fade } from 'svelte/transition';
   import Information from '../../../components/information/Information.svelte';
   import OutputGesture from '../../../components/output/OutputGesture.svelte';
-  import { gestures } from '../../../script/stores/Stores';
+  import { gestures, classifier } from '../../../script/stores/Stores';
   import { state } from '../../../script/stores/uiStore';
   import { t } from './../../../i18n';
+  import SelectedSensors from '../../../components/SelectedSensors.svelte';
 
   // Bool flags to know whether output microbit popup should be show
   let hasClosedPopup = false;
@@ -22,6 +23,10 @@
 </script>
 
 <div>
+  <div class="ml-1 mb-2">
+    {$t('content.model.selectedSensors')}
+    <SelectedSensors sensorChoice={classifier.getModel().getSensors()} />.
+  </div>
   <div class="relative flex h-8">
     <div class="absolute left-5 flex">
       <Information

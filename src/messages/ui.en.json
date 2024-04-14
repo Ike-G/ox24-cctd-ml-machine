@@ -90,6 +90,7 @@
   "content.model.trainModelFirstBody": "Go to the 'Trainer' page",
   "content.model.classification.helpHeading": "Probabil-ometer",
   "content.model.classification.helpBody": "For each prediction you make, the model will produce a percentage that describes how confident the model is in its prediction. This meter goes from 0% to 100%. With the slider next to it, you can determine the limit of how certain the model should be in its preduction to make an output (e.g. play a sound)",
+  "content.model.selectedSensors": "The current model was trained on and is using",
   "content.model.output.soundOptionCongratulations": "Congratulations",
   "content.model.output.soundOptionHighPitchBeep": "High pitch beep",
   "content.model.output.soundOptionLowPitchBeep": "Low pitch beep",
@@ -127,10 +128,12 @@
 
   "menu.sensors.helpHeading": "Sensors",
   "menu.sensors.helpBody": "Select the sensors to use for training",
-  
+
   "content.sensors.accelerometerTitle": "Accelerometer",
+  "content.sensors.accelerometerThe": "the accelerometer 🚀",
   "content.sensors.accelerometer": "Collects acceleration data from the micro:bit",
   "content.sensors.magnetometerTitle": "Magnetometer",
+  "content.sensors.magnetometerThe": "the magnetometer 🧲",
   "content.sensors.magnetometer": "Collects magnetic field strength data from the micro:bit",
   "content.sensors.alreadyTrained": "The model has already been trained.",
 
@@ -152,6 +155,7 @@
   "menu.trainer.trainNewModelButton": "Train new {model} model",
   "menu.trainer.TrainingFinished": "Training done",
   "menu.trainer.TrainingFinished.body": "Go to the Model-page to examine how well your model works",
+  "menu.trainer.TrainingFinished.sensors": "The current model was trained on",
   "menu.trainer.noFilters": "No filters have been selected. You must enable at least 1 filter in order to train a model",
   "menu.trainer.isTrainingModelButton": "Training model",
 

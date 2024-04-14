@@ -101,7 +101,14 @@
     string
   > {
     const labels = ['x', 'y', 'z', "x'", "y'", "z'"];
-    const colours = {accx: 'red', accy: 'green', accz: 'blue', magx: 'orange', magy: 'turquoise', magz: 'magenta'};
+    const colours = {
+      accx: 'red',
+      accy: 'green',
+      accz: 'blue',
+      magx: 'orange',
+      magy: 'turquoise',
+      magz: 'magenta',
+    };
     const recording: { x: number; y: number }[][] = [];
     for (let i = 0; i < sensorKeys.length; i++) {
       recording[i] = [];
@@ -114,7 +121,7 @@
     return {
       type: 'line',
       data: {
-        datasets: Array.from(Array(sensorKeys.length).keys()).map((idx) => {
+        datasets: Array.from(Array(sensorKeys.length).keys()).map(idx => {
           return {
             label: labels[idx],
             borderColor: colours[sensorKeys[idx]],
