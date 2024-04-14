@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script lang="ts">
   import SensorButton from './SensorButton.svelte';
   import { t } from '../../i18n';
   import { accel, magnet } from '../../script/stores/Stores';
