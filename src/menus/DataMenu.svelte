@@ -19,9 +19,9 @@
 
 <div class="w-full text-center justify-center pt-5 pb-7">
   {#if !get(sensorChoice).validChoice()}
-     <p class="text-xl">{$t('menu.data.noSensors')}</p> 
+    <p class="text-xl">{$t('menu.data.noSensors')}</p>
   {:else}
     <p class="text-7xl mb-4">{numberOfRecordings}</p>
     <p class="text-xl">{$t('menu.data.examples')}</p>
-  {/if} 
+  {/if}
 </div>

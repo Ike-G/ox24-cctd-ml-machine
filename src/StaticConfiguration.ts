@@ -13,7 +13,6 @@ import { HexOrigin } from './script/microbit-interfacing/Microbits';
 import { LayersModelTrainingSettings } from './script/mlmodels/LayersModelTrainer';
 import { MoEModelTrainingSettings } from './script/mlmodels/MoEModelTrainer';
 
-
 class StaticConfiguration {
   // in milliseconds, how long should be wait for reconnect before determining something catestrophic happened during the process?
   public static readonly reconnectTimeoutDuration: number = 7500;

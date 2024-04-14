@@ -19,6 +19,8 @@
   import { LossTrainingIteration } from '../../components/graphs/LossGraphUtil';
   import StaticConfiguration from '../../StaticConfiguration';
   import CookieManager from '../../script/CookieManager';
+  import SelectedSensors from '../../components/SelectedSensors.svelte';
+  import NoSensor from '../../components/NoSensor.svelte';
 
   const model = classifier.getModel();
 
@@ -40,6 +42,7 @@
 
 <TrainingFailedDialog />
 <div class="flex flex-col h-full">
+  <NoSensor />
   <ControlBar>
     <StandardButton
       fillOnHover
@@ -72,6 +75,10 @@
           </p>
           <p class="bold text-xl bold mt-5">
             {$t('menu.trainer.TrainingFinished.body')}
+          </p>
+          <p class="bold text-l bold mt-5">
+            {$t('menu.trainer.TrainingFinished.sensors')}
+            <SelectedSensors sensorChoice={classifier.getModel().getSensors()} />.
           </p>
         {/if}
         {#if $loss.length > 0 || $model.isTraining}

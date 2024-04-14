@@ -14,7 +14,7 @@ class LocalStorageRepositories implements Repositories {
 
   private static instance: LocalStorageRepositories;
 
-  constructor() { 
+  constructor() {
     if (LocalStorageRepositories.instance) {
       // Singleton
       throw new Error('Could not instantiate repository. It is already instantiated!');

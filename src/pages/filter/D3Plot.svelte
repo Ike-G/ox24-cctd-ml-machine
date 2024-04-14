@@ -9,7 +9,11 @@
   import { get } from 'svelte/store';
   import * as d3 from 'd3';
   import { state } from '../../script/stores/uiStore';
-  import { gestures, liveAccelerometerData, liveCombinedData } from '../../script/stores/Stores';
+  import {
+    gestures,
+    liveAccelerometerData,
+    liveCombinedData,
+  } from '../../script/stores/Stores';
   import FilterTypes, { FilterType } from '../../script/domain/FilterTypes';
   import FilterGraphLimits from '../../script/utils/FilterLimits';
   import { GestureData } from '../../script/domain/stores/gesture/Gesture';
@@ -53,7 +57,7 @@
   let plotDrawn = false;
 
   // Scalars to built graph and insert data in graph
-  const dimensions: Axis[] = get(sensorChoice).choiceKeys() as Axis[]
+  const dimensions: Axis[] = get(sensorChoice).choiceKeys() as Axis[];
   const { min, max } = FilterGraphLimits.getFilterLimits(filter);
   const xScalar: d3.ScalePoint<string> = d3
     .scalePoint()
@@ -182,7 +186,17 @@
         const magx = filterFunction(recording.data.magx);
         const magy = filterFunction(recording.data.magy);
         const magz = filterFunction(recording.data.magz);
-        recordings.push({ ID, gestureClassName, gestureClassID, accx, accy, accz, magx, magy, magz });
+        recordings.push({
+          ID,
+          gestureClassName,
+          gestureClassID,
+          accx,
+          accy,
+          accz,
+          magx,
+          magy,
+          magz,
+        });
       });
     });
     const classesIDs = [
@@ -274,7 +288,9 @@
       .style('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('fill', function (axis: Axis) {
-        return StaticConfiguration.liveGraphColors[['accx','accy','accz','magx','magy','magz'].indexOf(axis)];
+        return StaticConfiguration.liveGraphColors[
+          ['accx', 'accy', 'accz', 'magx', 'magy', 'magz'].indexOf(axis)
+        ];
       })
       .attr('y', -9)
       .text(function (axis: Axis) {

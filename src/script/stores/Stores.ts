@@ -20,7 +20,13 @@ import Engine from '../domain/stores/Engine';
 import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
 import SensorChoice from '../sensors/SensorChoice';
-import { sensorChoice } from '../../pages/sensors/SensorPage.svelte';
+import { writable, Readable, derived } from 'svelte/store';
+
+const accel = writable(false);
+const magnet = writable(false);
+const sensorChoice: Readable<SensorChoice> = derived([accel, magnet], ([a, m]) => {
+  return new SensorChoice(a, m);
+});
 
 const repositories: Repositories = new LocalStorageRepositories();
 
@@ -28,7 +34,7 @@ const gestures: Gestures = new Gestures(repositories.getGestureRepository());
 // Builds a classifier, which wraps the model so as to deal with updating gestures / filters
 // Model itself wraps both mlModel (which provides the .predict(data) interface), and the training procedure
 // We want to specify sensors at the training level, and have that carry over to each prediction.
-// ATTEMPT 1: Doing this by modifying trainModel 
+// ATTEMPT 1: Doing this by modifying trainModel
 const classifier: Classifier = repositories.getClassifierRepository().getClassifier();
 
 const accelerometerDataBuffer = new LiveDataBuffer<MicrobitAccelerometerData>(
@@ -54,6 +60,8 @@ const engine: Engine = new PollingPredictorEngine(classifier, liveCombinedData);
 // This helps us avoid leaking too many objects, that aren't meant to be interacted with
 // NEW: Reconsider whether liveAccelerometerData and liveMagnetometerData need to be exported
 export {
+  accel,
+  magnet,
   engine,
   gestures,
   classifier,

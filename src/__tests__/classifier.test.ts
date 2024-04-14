@@ -15,7 +15,9 @@ describe('Classifier tests', () => {
   test('Changing matrix does not mark model as untrained', async () => {
     const gesture = gestures.createGesture('some gesture');
     gestures.createGesture('some gesture2');
-    await classifier.getModel().train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+    await classifier
+      .getModel()
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
 
     gesture.setLEDOutput(new Array(25).fill(false) as boolean[]);
     expect(classifier.getModel().isTrained()).toBe(true);
@@ -24,7 +26,9 @@ describe('Classifier tests', () => {
   test('Adding gesture marks model as untrained', async () => {
     gestures.createGesture('some gesture');
     gestures.createGesture('some gesture2');
-    await classifier.getModel().train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+    await classifier
+      .getModel()
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
 
     gestures.createGesture('Added gesture');
 
@@ -35,7 +39,9 @@ describe('Classifier tests', () => {
     gestures.createGesture('some gesture');
     gestures.createGesture('some gesture2');
     const gesture3 = gestures.createGesture('some gesture2');
-    await classifier.getModel().train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+    await classifier
+      .getModel()
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
 
     gestures.removeGesture(gesture3.getId());
 

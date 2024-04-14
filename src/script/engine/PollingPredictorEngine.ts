@@ -78,9 +78,7 @@ class PollingPredictorEngine implements Engine {
   /**
    * Searches for an applicable amount of data, by iterately trying fewer data points if buffer fetch fails
    */
-  private getRawDataFromBuffer(
-    sampleSize: number,
-  ): TimestampedData<FlatCombinedData>[] {
+  private getRawDataFromBuffer(sampleSize: number): TimestampedData<FlatCombinedData>[] {
     try {
       return this.liveData
         .getBuffer()

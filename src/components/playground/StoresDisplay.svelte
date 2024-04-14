@@ -22,7 +22,7 @@
     <p class="whitespace-pre">
       {JSON.stringify($sensorChoice, null, 2).substring(
         2,
-        JSON.stringify($sensorChoice,null, 2).length - 1,
+        JSON.stringify($sensorChoice, null, 2).length - 1,
       )}
     </p>
   </div>
