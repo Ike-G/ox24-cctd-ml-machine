@@ -69,7 +69,7 @@
 
   const importExampleDataset = () => {
     // Imports 3 gestures, named Shake, Still and Circle (in that order)
-    // gestures.importFrom(exampleDataset);
+    gestures.importFrom(exampleDataset);
     // TODO: create new example datasets
     // Translate the names, that are originally english
     gestures.getGestures()[0].setName($t('content.data.noData.exampleName.shake'));
