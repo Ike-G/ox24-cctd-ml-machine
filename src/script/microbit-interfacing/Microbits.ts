@@ -447,7 +447,7 @@ class Microbits {
       this.inputOrigin = HexOrigin.PROPRIETARY;
       connectionBehaviour.onIdentifiedAsProprietary();
     }
-    if (data.startsWith("l_")) {
+    if (data.startsWith('l_')) {
       connectionBehaviour.lightChange(parseInt(data.slice(2)));
     }
     if (data.includes('vi_')) {

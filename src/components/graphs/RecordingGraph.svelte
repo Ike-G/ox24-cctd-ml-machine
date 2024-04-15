@@ -102,7 +102,7 @@
     { x: number; y: number }[],
     string
   > {
-    const labels = ['x', 'y', 'z', "x'", "y'", "z'", "l"];
+    const labels = ['x', 'y', 'z', "x'", "y'", "z'", 'l'];
     const colours = {
       accx: 'red',
       accy: 'green',

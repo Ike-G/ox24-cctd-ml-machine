@@ -26,9 +26,12 @@ import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLi
 const accel = writable(false);
 const magnet = writable(false);
 const light = writable(false);
-const sensorChoice: Readable<SensorChoice> = derived([accel, magnet, light], ([a, m, l]) => {
-  return new SensorChoice(a, m, l);
-});
+const sensorChoice: Readable<SensorChoice> = derived(
+  [accel, magnet, light],
+  ([a, m, l]) => {
+    return new SensorChoice(a, m, l);
+  },
+);
 
 const repositories: Repositories = new LocalStorageRepositories();
 
@@ -51,16 +54,16 @@ const magnetometerDataBuffer = new LiveDataBuffer<MicrobitMagnetometerData>(
 const liveMagnetometerData: LiveData<MicrobitMagnetometerData> =
   new MicrobitMagnetometerLiveData(magnetometerDataBuffer);
 
-const lightDataBuffer: LiveDataBuffer<MicrobitLightData> = new LiveDataBuffer<MicrobitLightData>(
-  StaticConfiguration.lightLiveDataBufferSize,
+const lightDataBuffer: LiveDataBuffer<MicrobitLightData> =
+  new LiveDataBuffer<MicrobitLightData>(StaticConfiguration.lightLiveDataBufferSize);
+const liveLightData: LiveData<MicrobitLightData> = new MicrobitLightLiveData(
+  lightDataBuffer,
 );
-const liveLightData: LiveData<MicrobitLightData> =
-  new MicrobitLightLiveData(lightDataBuffer);
 
 const liveCombinedData: CombinedLiveData = new CombinedLiveData(
   liveAccelerometerData,
   liveMagnetometerData,
-  liveLightData
+  liveLightData,
 );
 
 const engine: Engine = new PollingPredictorEngine(classifier, liveCombinedData);

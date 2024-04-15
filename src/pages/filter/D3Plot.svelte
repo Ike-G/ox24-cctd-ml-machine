@@ -199,7 +199,7 @@
           magx,
           magy,
           magz,
-          light
+          light,
         });
       });
     });

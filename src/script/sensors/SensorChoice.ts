@@ -13,8 +13,8 @@ class SensorChoice {
   }
 
   public lightSelected(): boolean {
-   return this.light;
- }
+    return this.light;
+  }
 
   public choiceIds(): string[] {
     const ids: string[] = [];

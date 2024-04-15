@@ -1,12 +1,6 @@
 import { MicrobitAccelerometerData } from './MicrobitAccelerometerData';
 import { MicrobitMagnetometerData } from './MicrobitMagnetometerData';
-import {
-  Subscriber,
-  Unsubscriber,
-  get,
-  Readable,
-  derived,
-} from 'svelte/store';
+import { Subscriber, Unsubscriber, get, Readable, derived } from 'svelte/store';
 import LiveData from '../domain/stores/LiveData';
 import LiveDataBuffer from '../domain/LiveDataBuffer';
 import StaticConfiguration from '../../StaticConfiguration';
@@ -33,7 +27,7 @@ export type CombinedData = {
     y: number;
     z: number;
   };
-  light: number
+  light: number;
 };
 
 class CombinedLiveData implements LiveData<FlatCombinedData> {
@@ -42,7 +36,7 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
   constructor(
     accelerometerData: LiveData<MicrobitAccelerometerData>,
     magnetometerData: LiveData<MicrobitMagnetometerData>,
-    lightData: LiveData<MicrobitLightData>
+    lightData: LiveData<MicrobitLightData>,
   ) {
     this.dataBuffer = new LiveDataBuffer(
       Math.min(
@@ -50,11 +44,22 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
         StaticConfiguration.accelerometerLiveDataBufferSize,
       ),
     );
-    this.combinedStore = derived([accelerometerData, magnetometerData, lightData], ([a, m, l]) => {
-      const data = { accx: a.x, accy: a.y, accz: a.z, magx: m.x, magy: m.y, magz: m.z, light: l.l };
-      this.dataBuffer.addValue(data);
-      return data;
-    });
+    this.combinedStore = derived(
+      [accelerometerData, magnetometerData, lightData],
+      ([a, m, l]) => {
+        const data = {
+          accx: a.x,
+          accy: a.y,
+          accz: a.z,
+          magx: m.x,
+          magy: m.y,
+          magz: m.z,
+          light: l.l,
+        };
+        this.dataBuffer.addValue(data);
+        return data;
+      },
+    );
   }
   public getBuffer(): LiveDataBuffer<FlatCombinedData> {
     return this.dataBuffer;

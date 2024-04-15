@@ -18,7 +18,11 @@ import LoggingDecorator from './LoggingDecorator';
 import TypingUtils from '../../TypingUtils';
 import { DeviceRequestStates } from '../../stores/connectDialogStore';
 import StaticConfiguration from '../../../StaticConfiguration';
-import { liveAccelerometerData, liveLightData, liveMagnetometerData } from '../../stores/Stores';
+import {
+  liveAccelerometerData,
+  liveLightData,
+  liveMagnetometerData,
+} from '../../stores/Stores';
 
 let text = get(t);
 t.subscribe(t => (text = t));
@@ -155,7 +159,8 @@ class InputBehaviour extends LoggingDecorator {
   magnetometerChange(x: number, y: number, z: number): void {
     super.magnetometerChange(x, y, z);
 
-    const f = (a: number, b: number) => (Math.atan2(Math.abs(a), Math.abs(b))/Math.PI - 0.25)*4;
+    const f = (a: number, b: number) =>
+      (Math.atan2(Math.abs(a), Math.abs(b)) / Math.PI - 0.25) * 4;
 
     liveMagnetometerData.put({
       x: f(y, x), // <- Compass heading, in principle
@@ -166,7 +171,7 @@ class InputBehaviour extends LoggingDecorator {
 
   lightChange(l: number): void {
     liveLightData.put({
-      l: l / 255
+      l: l / 255,
     });
   }
 
