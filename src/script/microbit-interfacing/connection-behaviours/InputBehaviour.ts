@@ -18,7 +18,7 @@ import LoggingDecorator from './LoggingDecorator';
 import TypingUtils from '../../TypingUtils';
 import { DeviceRequestStates } from '../../stores/connectDialogStore';
 import StaticConfiguration from '../../../StaticConfiguration';
-import { liveAccelerometerData, liveMagnetometerData } from '../../stores/Stores';
+import { liveAccelerometerData, liveLightData, liveMagnetometerData } from '../../stores/Stores';
 
 let text = get(t);
 t.subscribe(t => (text = t));
@@ -161,6 +161,12 @@ class InputBehaviour extends LoggingDecorator {
       x: f(y, x), // <- Compass heading, in principle
       y: f(x, z),
       z: f(y, z),
+    });
+  }
+
+  lightChange(l: number): void {
+    liveLightData.put({
+      l: l / 255
     });
   }
 

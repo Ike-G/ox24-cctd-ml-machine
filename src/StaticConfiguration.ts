@@ -66,6 +66,7 @@ class StaticConfiguration {
     '#eb8634',
     '#4cfaee',
     '#fa4cfa',
+    '#6b32a8',
   ];
 
   // What will the min and max y-values on the livegraph be?
@@ -100,6 +101,12 @@ class StaticConfiguration {
    * Insertions are O(1) and fetching is O(n) where n is the number of items fetched.
    */
   public static readonly magnetometerLiveDataBufferSize = 600;
+
+  /**
+   * The size of the light data livedata buffer. Larger means more memory is consumed.
+   * Insertions are O(1) and fetching is O(n) where n is the number of items fetched.
+   */
+  public static readonly lightLiveDataBufferSize = 600;
 
   /**
    * The minimum number of recordings per gesture to indicate sufficient data.

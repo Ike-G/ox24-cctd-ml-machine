@@ -21,6 +21,7 @@ import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
 import SensorChoice from '../sensors/SensorChoice';
 import { writable, Readable, derived } from 'svelte/store';
+import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLightData';
 
 const accel = writable(false);
 const magnet = writable(false);
@@ -49,9 +50,16 @@ const magnetometerDataBuffer = new LiveDataBuffer<MicrobitMagnetometerData>(
 const liveMagnetometerData: LiveData<MicrobitMagnetometerData> =
   new MicrobitMagnetometerLiveData(magnetometerDataBuffer);
 
+const lightDataBuffer: LiveDataBuffer<MicrobitLightData> = new LiveDataBuffer<MicrobitLightData>(
+  StaticConfiguration.lightLiveDataBufferSize,
+);
+const liveLightData: LiveData<MicrobitLightData> =
+  new MicrobitLightLiveData(lightDataBuffer);
+
 const liveCombinedData: CombinedLiveData = new CombinedLiveData(
   liveAccelerometerData,
   liveMagnetometerData,
+  liveLightData
 );
 
 const engine: Engine = new PollingPredictorEngine(classifier, liveCombinedData);
@@ -67,6 +75,7 @@ export {
   classifier,
   liveAccelerometerData,
   liveMagnetometerData,
+  liveLightData,
   liveCombinedData,
   sensorChoice,
 };
