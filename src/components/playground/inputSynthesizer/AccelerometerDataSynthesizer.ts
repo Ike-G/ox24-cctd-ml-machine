@@ -80,9 +80,9 @@ class AccelerometerSynthesizer implements Readable<AccelerometerSynthesizerData>
   public generateData() {
     const val = new Date().getTime();
     this.liveData.put({
-      x: Math.sin(val * get(this.store).xSpeed),
-      y: Math.sin(val * get(this.store).ySpeed),
-      z: Math.sin(val * get(this.store).zSpeed),
+      accx: Math.sin(val * get(this.store).xSpeed),
+      accy: Math.sin(val * get(this.store).ySpeed),
+      accz: Math.sin(val * get(this.store).zSpeed),
     });
   }
 
