@@ -1,18 +1,11 @@
 import ClassifierInput from '../domain/ClassifierInput';
 import Filters from '../domain/Filters';
+import { FlatCombinedDataArray } from '../livedata/CombinedData';
 import SensorChoice from '../sensors/SensorChoice';
 
 class GeneralClassifierInput implements ClassifierInput {
   constructor(
-    private record: {
-      accx: number[];
-      accy: number[];
-      accz: number[];
-      magx: number[];
-      magy: number[];
-      magz: number[];
-      light: number[];
-    },
+    private record: FlatCombinedDataArray,
   ) {}
 
   // Reconsider whether to have this class include sensors in the argument or more widely

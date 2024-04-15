@@ -15,6 +15,7 @@ import {
 import Gesture, { GestureData, GestureID, GestureOutput } from './Gesture';
 import StaticConfiguration from '../../../../StaticConfiguration';
 import GestureRepository from '../../GestureRepository';
+import { FlatCombinedDataArray } from '../../../livedata/CombinedData';
 
 export type PersistantGestureData = {
   name: string;
@@ -25,15 +26,7 @@ export type PersistantGestureData = {
 
 export type RecordingData = {
   ID: number;
-  data: {
-    accx: number[];
-    accy: number[];
-    accz: number[];
-    magx: number[];
-    magy: number[];
-    magz: number[];
-    light: number[];
-  };
+  data: FlatCombinedDataArray;
 };
 
 class Gestures implements Readable<GestureData[]> {

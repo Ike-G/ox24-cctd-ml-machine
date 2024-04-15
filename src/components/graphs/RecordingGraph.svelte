@@ -19,26 +19,11 @@
   import RecordingInspector from '../3d-inspector/RecordingInspector.svelte';
   import { sensorChoice } from '../../script/stores/Stores';
   import { get } from 'svelte/store';
+  import { FlatCombinedDataArray } from '../../script/livedata/CombinedData';
 
-  const sensorKeys = get(sensorChoice).choiceKeys() as (keyof {
-    accx: number[];
-    accy: number[];
-    accz: number[];
-    magx: number[];
-    magy: number[];
-    magz: number[];
-    light: number[];
-  })[];
+  const sensorKeys = get(sensorChoice).choiceKeys() as (keyof FlatCombinedDataArray)[];
 
-  export let data: {
-    accx: number[];
-    accy: number[];
-    accz: number[];
-    magx: number[];
-    magy: number[];
-    magz: number[];
-    light: number[];
-  };
+  export let data: FlatCombinedDataArray;
 
   let verticalLineX = NaN;
   let hoverIndex = NaN;

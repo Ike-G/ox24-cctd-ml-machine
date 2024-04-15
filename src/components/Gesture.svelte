@@ -28,6 +28,7 @@
   } from '../script/stores/Stores';
   import Gesture from '../script/domain/stores/gesture/Gesture';
   import { RecordingData } from '../script/domain/stores/gesture/Gestures';
+  import { FlatCombinedDataArray } from '../script/livedata/CombinedData';
 
   // Variables for component
   export let onNoMicrobitSelect: () => void;
@@ -74,15 +75,7 @@
     isThisRecording = true;
 
     // New array for data
-    let newData: {
-      accx: number[];
-      accy: number[];
-      accz: number[];
-      magx: number[];
-      magy: number[];
-      magz: number[];
-      light: number[];
-    } = { accx: [], accy: [], accz: [], magx: [], magy: [], magz: [], light: [] };
+    let newData: FlatCombinedDataArray = { accx: [], accy: [], accz: [], magx: [], magy: [], magz: [], light: [] };
 
     // Set timeout to allow recording in 1s
     const unsubscribe = liveCombinedData.subscribe(data => {

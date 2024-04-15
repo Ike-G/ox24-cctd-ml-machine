@@ -16,6 +16,16 @@ export type FlatCombinedData = {
   light: number;
 };
 
+export type FlatCombinedDataArray = {
+  accx: number[];
+  accy: number[];
+  accz: number[];
+  magx: number[];
+  magy: number[];
+  magz: number[];
+  light: number[];
+};
+
 export type CombinedData = {
   accel: {
     x: number;
