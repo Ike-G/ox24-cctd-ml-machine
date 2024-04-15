@@ -33,6 +33,8 @@ int connected = 0;
 // Manually increase this build number each build. Used by the application to determine what capabilities the firmware has.
 int buildNumber = 1;
 
+void lightLoop();
+
 /**
  * @brief Sends a message with UART
  * 
@@ -54,7 +56,8 @@ void onConnected(MicroBitEvent)
     connected = 1; // Set the connected flag
 
     printSmiley(GLAD_SMILEY);
-
+    create_fiber(lightLoop);
+   
     for (size_t i = 0; i < 12; i++)
     {
         if (!connected) {
@@ -90,6 +93,15 @@ void onDelim(MicroBitEvent)
     if (prefix == "s_") { // Will be request to play sound
         ManagedString soundNo = r.substring(2,1);
         playSound(getSound(soundNo), beat);
+    }
+}
+
+void lightLoop() {
+    while (1) {
+        int light = uBit.display.readLightLevel();
+        uart->send(ManagedString("l_") + ManagedString(light));
+
+        fiber_sleep(30);
     }
 }
 
