@@ -50,8 +50,8 @@
     </div>
   {:else}
     <!-- Input microbit is assigned -->
-    <div class="relative w-full h-full">
-      <div class="absolute w-full h-full">
+    <div class="flex flex-row w-full h-full">
+      <div class="w-full h-full">
         <MicrobitLiveGraph width={componentWidth - 160} />
       </div>
       {#if !$state.isInputReady}
@@ -70,7 +70,7 @@
           <LiveGraphInformationSection />
           <!-- TODO: Update if including magnetometer -->
         </div>
-        <div class="absolute right-2 top-2 m-0 float-right">
+        <div class="absolute bottom-2 left-2 m-0 float-right">
           <ConnectedLiveGraphButtons
             onInputDisconnectButtonClicked={inputDisconnectButtonClicked}
             onOutputConnectButtonClicked={connectButtonClicked}
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div
-        class="absolute right-0 cursor-pointer hover:bg-secondary hover:bg-opacity-10 transition"
+        class="cursor-pointer hover:bg-secondary hover:bg-opacity-10 transition"
         on:click={() => (isLive3DOpen = true)}>
         <View3DLive width={160} height={160} freeze={isLive3DOpen} />
       </div>

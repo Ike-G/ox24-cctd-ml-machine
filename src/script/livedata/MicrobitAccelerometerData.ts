@@ -8,18 +8,18 @@ import LiveDataBuffer from '../domain/LiveDataBuffer';
 import LiveData from '../domain/stores/LiveData';
 
 export type MicrobitAccelerometerData = {
-  x: number;
-  y: number;
-  z: number;
+  accx: number;
+  accy: number;
+  accz: number;
 };
 
 class MicrobitAccelerometerLiveData implements LiveData<MicrobitAccelerometerData> {
   private store: Writable<MicrobitAccelerometerData>;
   constructor(private dataBuffer: LiveDataBuffer<MicrobitAccelerometerData>) {
     this.store = writable({
-      x: 0,
-      y: 0,
-      z: 0,
+      accx: 0,
+      accy: 0,
+      accz: 0,
     });
   }
 
@@ -37,7 +37,7 @@ class MicrobitAccelerometerLiveData implements LiveData<MicrobitAccelerometerDat
   }
 
   public getLabels(): string[] {
-    return ['X', 'Y', 'Z'];
+    return ['Acc-X', 'Acc-Y', 'Acc-Z'];
   }
 
   public getPropertyNames(): string[] {
