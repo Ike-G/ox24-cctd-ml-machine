@@ -134,7 +134,9 @@
   "content.sensors.magnetometerTitle": "NEEDS TRANSLATION: Magnetometer",
   "content.sensors.magnetometerThe": "NEEDS TRANSLATION: the magnetometer",
   "content.sensors.magnetometer": "NEEDS TRANSLATION: Collects magnetic field strength data from the micro:bit",
-  "content.sensors.alreadyTrained": "NEEDS TRANSLATION: Model has already been trained",
+  "content.sensors.lightTitle": "NEEDS TRANSLATION: Light Sensor",
+  "content.sensors.lightThe": "NEEDS TRANSLATION: the light sensor 🔦",
+  "content.sensors.light": "NEEDS TRANSLATION: Collects brightness data from the LEDs on the micro:bit",
 
   "menu.data.helpHeading": "Data",
   "menu.data.helpBody": "For at træne en model til at genkende forskellige bevægelser, skal vi have gode eksempler på 'god opførsel', som vi kan vise træneren. Her kan i oprette klasser (en type bevægelse) og optage eksempler til hver klasse. Der skal være mindst 2 klasser med hver 3 eksempler før træneren kan træne en model.",

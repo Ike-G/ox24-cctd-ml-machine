@@ -2,6 +2,7 @@ class SensorChoice {
   constructor(
     private accel: boolean,
     private magnet: boolean,
+    private light: boolean,
   ) {}
   public accelerometerSelected(): boolean {
     return this.accel;
@@ -11,10 +12,15 @@ class SensorChoice {
     return this.magnet;
   }
 
+  public lightSelected(): boolean {
+   return this.light;
+ }
+
   public choiceIds(): string[] {
     const ids: string[] = [];
     if (this.accel) ids.push('accelerometer');
     if (this.magnet) ids.push('magnetometer');
+    if (this.light) ids.push('light');
     return ids;
   }
 
@@ -26,11 +32,14 @@ class SensorChoice {
     if (this.magnet) {
       keys = keys.concat(['magx', 'magy', 'magz']);
     }
+    if (this.light) {
+      keys.push('light');
+    }
     return keys;
   }
 
   public validChoice(): boolean {
-    return this.accel || this.magnet;
+    return this.accel || this.magnet || this.light;
   }
 }
 export default SensorChoice;

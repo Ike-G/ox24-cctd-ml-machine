@@ -30,6 +30,7 @@
       magx: randGesture.getRecordings()[0].data.magx,
       magy: randGesture.getRecordings()[0].data.magy,
       magz: randGesture.getRecordings()[0].data.magz,
+      light: randGesture.getRecordings()[0].data.light,
     });
     classifier.classify(input).then(() => {
       playgroundContext.addMessage('Finished predicting');

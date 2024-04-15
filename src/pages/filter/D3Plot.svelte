@@ -36,8 +36,9 @@
     magx: number;
     magy: number;
     magz: number;
+    light: number;
   };
-  type Axis = 'accx' | 'accy' | 'accz' | 'magx' | 'magy' | 'magz';
+  type Axis = 'accx' | 'accy' | 'accz' | 'magx' | 'magy' | 'magz' | 'light';
   type PathDrawer = (gesture: RecordingRepresentation) => string | null;
 
   // Data
@@ -162,6 +163,7 @@
       magx: filterFunction([liveData!.magx]),
       magy: filterFunction([liveData!.magy]),
       magz: filterFunction([liveData!.magz]),
+      light: filterFunction([liveData!.light]),
     };
     return filteredData;
   }
@@ -186,6 +188,7 @@
         const magx = filterFunction(recording.data.magx);
         const magy = filterFunction(recording.data.magy);
         const magz = filterFunction(recording.data.magz);
+        const light = filterFunction(recording.data.light);
         recordings.push({
           ID,
           gestureClassName,
@@ -196,6 +199,7 @@
           magx,
           magy,
           magz,
+          light
         });
       });
     });

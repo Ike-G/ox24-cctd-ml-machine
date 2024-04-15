@@ -32,6 +32,7 @@ export type RecordingData = {
     magx: number[];
     magy: number[];
     magz: number[];
+    light: number[];
   };
 };
 

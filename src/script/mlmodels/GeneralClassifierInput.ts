@@ -11,6 +11,7 @@ class GeneralClassifierInput implements ClassifierInput {
       magx: number[];
       magy: number[];
       magz: number[];
+      light: number[];
     },
   ) {}
 

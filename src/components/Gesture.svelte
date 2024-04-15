@@ -81,7 +81,8 @@
       magx: number[];
       magy: number[];
       magz: number[];
-    } = { accx: [], accy: [], accz: [], magx: [], magy: [], magz: [] };
+      light: number[];
+    } = { accx: [], accy: [], accz: [], magx: [], magy: [], magz: [], light: [] };
 
     // Set timeout to allow recording in 1s
     const unsubscribe = liveCombinedData.subscribe(data => {
@@ -91,6 +92,7 @@
       newData.magx.push(data.magx);
       newData.magy.push(data.magy);
       newData.magz.push(data.magz);
+      newData.light.push(data.light);
     });
 
     // Once duration is over (1000ms default), stop recording
