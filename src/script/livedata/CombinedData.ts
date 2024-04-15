@@ -16,6 +16,16 @@ export type FlatCombinedData = {
   light: number;
 };
 
+export type FlatCombinedDataArray = {
+  accx: number[];
+  accy: number[];
+  accz: number[];
+  magx: number[];
+  magy: number[];
+  magz: number[];
+  light: number[];
+};
+
 export type CombinedData = {
   accel: {
     x: number;
@@ -48,12 +58,12 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
       [accelerometerData, magnetometerData, lightData],
       ([a, m, l]) => {
         const data = {
-          accx: a.x,
-          accy: a.y,
-          accz: a.z,
-          magx: m.x,
-          magy: m.y,
-          magz: m.z,
+          accx: a.accx,
+          accy: a.accy,
+          accz: a.accz,
+          magx: m.magx,
+          magy: m.magy,
+          magz: m.magz,
           light: l.l,
         };
         this.dataBuffer.addValue(data);

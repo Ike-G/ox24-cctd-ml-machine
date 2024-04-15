@@ -55,7 +55,7 @@
     const labels = [];
     for (let i = 0; i < liveData.getSeriesSize(); i++) {
       const label = liveData.getLabels()[i];
-      const color = StaticConfiguration.liveGraphColors[i];
+      const color = StaticConfiguration.liveGraphColors[liveData.getPropertyNames()[i]];
       labels.push({
         label: label,
         color: color,
@@ -74,8 +74,6 @@
       const normalMax = maxValue - minValue;
       const normalValue = axes[labels[i].id] - minValue;
       const newValue = (normalValue / normalMax) * graphHeight;
-      if (labels[i].label === 'Z') {
-      }
       labels[i].arrowHeight = newValue + 4; // We add 4 to align the arrow to the graph line
       // labelHeight will be overridden in fixOverlappingLabels if necessary
       labels[i].textHeight = newValue - CHARACTER_HEIGHT + 2; // Subract height to align with arrow
@@ -99,13 +97,13 @@
 </script>
 
 {#if !hidden}
-  <div class="h-40 w-6 relative">
+  <div class="h-13 w-6 relative no-select pointer-events-none">
     {#each labels as label}
       <div
         class="absolute arrowLeft -m-3.5"
         style="bottom: {label.arrowHeight}px; border-right-color: {label.color};" />
       <p
-        class="absolute ml-3 text-xl"
+        class="absolute ml-3 text-m block w-100 nowrap"
         style="bottom: {label.textHeight}px; color: {label.color};">
         {label.label}
       </p>

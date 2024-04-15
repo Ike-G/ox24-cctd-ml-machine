@@ -8,18 +8,18 @@ import LiveDataBuffer from '../domain/LiveDataBuffer';
 import LiveData from '../domain/stores/LiveData';
 
 export type MicrobitMagnetometerData = {
-  x: number;
-  y: number;
-  z: number;
+  magx: number;
+  magy: number;
+  magz: number;
 };
 
 class MicrobitMagnetometerLiveData implements LiveData<MicrobitMagnetometerData> {
   private store: Writable<MicrobitMagnetometerData>;
   constructor(private dataBuffer: LiveDataBuffer<MicrobitMagnetometerData>) {
     this.store = writable({
-      x: 0,
-      y: 0,
-      z: 0,
+      magx: 0,
+      magy: 0,
+      magz: 0,
     });
   }
 
@@ -37,7 +37,7 @@ class MicrobitMagnetometerLiveData implements LiveData<MicrobitMagnetometerData>
   }
 
   public getLabels(): string[] {
-    return ['X', 'Y', 'Z'];
+    return ['Mag-X', 'Mag-Y', 'Mag-Z'];
   }
 
   public getPropertyNames(): string[] {

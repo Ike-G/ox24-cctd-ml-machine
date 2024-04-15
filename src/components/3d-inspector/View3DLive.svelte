@@ -21,7 +21,11 @@
 
   $: {
     if (!freeze) {
-      liveDataPoint = $smoothedLiveData;
+      liveDataPoint = {
+        x: $smoothedLiveData.accx,
+        y: $smoothedLiveData.accy,
+        z: $smoothedLiveData.accz,
+      };
     }
   }
 </script>

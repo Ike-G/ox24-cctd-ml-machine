@@ -150,9 +150,9 @@ class InputBehaviour extends LoggingDecorator {
     const f = (u: number) => u / 1000.0;
 
     liveAccelerometerData.put({
-      x: f(x),
-      y: f(y),
-      z: f(z),
+      accx: f(x),
+      accy: f(y),
+      accz: f(z),
     });
   }
 
@@ -163,15 +163,15 @@ class InputBehaviour extends LoggingDecorator {
       (Math.atan2(Math.abs(a), Math.abs(b)) / Math.PI - 0.25) * 4;
 
     liveMagnetometerData.put({
-      x: f(y, x), // <- Compass heading, in principle
-      y: f(x, z),
-      z: f(y, z),
+      magx: f(y, x), // <- Compass heading, in principle
+      magy: f(x, z),
+      magz: f(y, z),
     });
   }
 
   lightChange(l: number): void {
     liveLightData.put({
-      l: l / 255,
+      l: (l / 255) * 2.5,
     });
   }
 
