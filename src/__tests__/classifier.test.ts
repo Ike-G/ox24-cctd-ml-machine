@@ -17,7 +17,7 @@ describe('Classifier tests', () => {
     gestures.createGesture('some gesture2');
     await classifier
       .getModel()
-      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true, true));
 
     gesture.setLEDOutput(new Array(25).fill(false) as boolean[]);
     expect(classifier.getModel().isTrained()).toBe(true);
@@ -28,7 +28,7 @@ describe('Classifier tests', () => {
     gestures.createGesture('some gesture2');
     await classifier
       .getModel()
-      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true, true));
 
     gestures.createGesture('Added gesture');
 
@@ -41,7 +41,7 @@ describe('Classifier tests', () => {
     const gesture3 = gestures.createGesture('some gesture2');
     await classifier
       .getModel()
-      .train(new TestMLModelTrainer(2), new SensorChoice(true, true));
+      .train(new TestMLModelTrainer(2), new SensorChoice(true, true, true));
 
     gestures.removeGesture(gesture3.getId());
 

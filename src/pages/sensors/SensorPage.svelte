@@ -1,7 +1,7 @@
 <script lang="ts">
   import SensorButton from './SensorButton.svelte';
   import { t } from '../../i18n';
-  import { accel, magnet } from '../../script/stores/Stores';
+  import { accel, magnet, light } from '../../script/stores/Stores';
 </script>
 
 <main class="flex flex-col h-full justify-center">
@@ -12,6 +12,9 @@
     </div>
     <div class="flex-grow">
       <SensorButton sensor="magnetometer" state={magnet} />
+    </div>
+    <div class="flex-grow">
+      <SensorButton sensor="light" state={light} />
     </div>
   </div>
 </main>

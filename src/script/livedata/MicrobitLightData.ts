@@ -7,37 +7,33 @@ import { Subscriber, Unsubscriber, Writable, get, writable } from 'svelte/store'
 import LiveDataBuffer from '../domain/LiveDataBuffer';
 import LiveData from '../domain/stores/LiveData';
 
-export type MicrobitAccelerometerData = {
-  accx: number;
-  accy: number;
-  accz: number;
+export type MicrobitLightData = {
+  l: number;
 };
 
-class MicrobitAccelerometerLiveData implements LiveData<MicrobitAccelerometerData> {
-  private store: Writable<MicrobitAccelerometerData>;
-  constructor(private dataBuffer: LiveDataBuffer<MicrobitAccelerometerData>) {
+class MicrobitLightLiveData implements LiveData<MicrobitLightData> {
+  private store: Writable<MicrobitLightData>;
+  constructor(private dataBuffer: LiveDataBuffer<MicrobitLightData>) {
     this.store = writable({
-      accx: 0,
-      accy: 0,
-      accz: 0,
+      l: 0,
     });
   }
 
-  public getBuffer(): LiveDataBuffer<MicrobitAccelerometerData> {
+  public getBuffer(): LiveDataBuffer<MicrobitLightData> {
     return this.dataBuffer;
   }
 
-  public put(data: MicrobitAccelerometerData): void {
+  public put(data: MicrobitLightData): void {
     this.store.set(data);
     this.dataBuffer.addValue(data);
   }
 
   public getSeriesSize(): number {
-    return 3;
+    return 1;
   }
 
   public getLabels(): string[] {
-    return ['Acc-X', 'Acc-Y', 'Acc-Z'];
+    return ['L'];
   }
 
   public getPropertyNames(): string[] {
@@ -45,11 +41,11 @@ class MicrobitAccelerometerLiveData implements LiveData<MicrobitAccelerometerDat
   }
 
   public subscribe(
-    run: Subscriber<MicrobitAccelerometerData>,
-    invalidate?: ((value?: MicrobitAccelerometerData | undefined) => void) | undefined,
+    run: Subscriber<MicrobitLightData>,
+    invalidate?: ((value?: MicrobitLightData | undefined) => void) | undefined,
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export default MicrobitAccelerometerLiveData;
+export default MicrobitLightLiveData;

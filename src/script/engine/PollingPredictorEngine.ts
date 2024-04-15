@@ -72,6 +72,7 @@ class PollingPredictorEngine implements Engine {
       magx: bufferedData.map(data => data.value.magx),
       magy: bufferedData.map(data => data.value.magy),
       magz: bufferedData.map(data => data.value.magz),
+      light: bufferedData.map(data => data.value.light),
     });
   }
 

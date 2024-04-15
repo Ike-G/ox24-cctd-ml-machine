@@ -19,24 +19,11 @@
   import RecordingInspector from '../3d-inspector/RecordingInspector.svelte';
   import { sensorChoice } from '../../script/stores/Stores';
   import { get } from 'svelte/store';
+  import { FlatCombinedDataArray } from '../../script/livedata/CombinedData';
 
-  const sensorKeys = get(sensorChoice).choiceKeys() as (keyof {
-    accx: number[];
-    accy: number[];
-    accz: number[];
-    magx: number[];
-    magy: number[];
-    magz: number[];
-  })[];
+  const sensorKeys = get(sensorChoice).choiceKeys() as (keyof FlatCombinedDataArray)[];
 
-  export let data: {
-    accx: number[];
-    accy: number[];
-    accz: number[];
-    magx: number[];
-    magy: number[];
-    magz: number[];
-  };
+  export let data: FlatCombinedDataArray;
 
   let verticalLineX = NaN;
   let hoverIndex = NaN;
@@ -45,15 +32,15 @@
   const verticalLineCol = 'black';
   const verticalLineWidth = 1;
 
-  // TODO: currently deals only with the first 3 dimensions actively being used, need to make more explicit / change
+  // TODO: currently always just shows accelerometer, but does anything else make sense at the moment?
   const getDataByIndex = (index: number) => {
     if (isNaN(index)) {
       return { x: 0, y: 0, z: 0 };
     }
     return {
-      x: data[sensorKeys[0]][index],
-      y: data[sensorKeys[1]][index],
-      z: data[sensorKeys[2]][index],
+      x: data.accx[index],
+      y: data.accy[index],
+      z: data.accz[index],
     };
   };
 
@@ -100,7 +87,7 @@
     { x: number; y: number }[],
     string
   > {
-    const labels = ['x', 'y', 'z', "x'", "y'", "z'"];
+    const labels = ['x', 'y', 'z', "x'", "y'", "z'", 'l'];
     const colours = {
       accx: 'red',
       accy: 'green',
@@ -108,6 +95,7 @@
       magx: 'orange',
       magy: 'turquoise',
       magz: 'magenta',
+      light: 'purple',
     };
     const recording: { x: number; y: number }[][] = [];
     for (let i = 0; i < sensorKeys.length; i++) {

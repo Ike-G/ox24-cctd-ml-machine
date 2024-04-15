@@ -46,7 +46,8 @@ abstract class LoggingDecorator implements ConnectionBehaviour {
   }
 
   onUartMessageReceived(message: string): void {
-    this.enableLogging && console.log(`Message '${message}' was received`);
+    void message;
+    // this.enableLogging && console.log(`Message '${message}' was received`);
   }
 
   onReady(): void {
@@ -54,10 +55,12 @@ abstract class LoggingDecorator implements ConnectionBehaviour {
   }
 
   accelerometerChange(x: number, y: number, z: number): void {
+    void x, y, z;
     // this.enableLogging && this.logTimed('Accelerometer X:', x, 'Y:', y, 'Z:', z);
   }
 
   magnetometerChange(x: number, y: number, z: number): void {
+    void x, y, z;
     // this.enableLogging && this.logTimed('Magnetometer X:', x, 'Y:', y, 'Z:', z);
   }
 

@@ -21,12 +21,17 @@ import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
 import SensorChoice from '../sensors/SensorChoice';
 import { writable, Readable, derived } from 'svelte/store';
+import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLightData';
 
 const accel = writable(false);
 const magnet = writable(false);
-const sensorChoice: Readable<SensorChoice> = derived([accel, magnet], ([a, m]) => {
-  return new SensorChoice(a, m);
-});
+const light = writable(false);
+const sensorChoice: Readable<SensorChoice> = derived(
+  [accel, magnet, light],
+  ([a, m, l]) => {
+    return new SensorChoice(a, m, l);
+  },
+);
 
 const repositories: Repositories = new LocalStorageRepositories();
 
@@ -49,9 +54,16 @@ const magnetometerDataBuffer = new LiveDataBuffer<MicrobitMagnetometerData>(
 const liveMagnetometerData: LiveData<MicrobitMagnetometerData> =
   new MicrobitMagnetometerLiveData(magnetometerDataBuffer);
 
+const lightDataBuffer: LiveDataBuffer<MicrobitLightData> =
+  new LiveDataBuffer<MicrobitLightData>(StaticConfiguration.lightLiveDataBufferSize);
+const liveLightData: LiveData<MicrobitLightData> = new MicrobitLightLiveData(
+  lightDataBuffer,
+);
+
 const liveCombinedData: CombinedLiveData = new CombinedLiveData(
   liveAccelerometerData,
   liveMagnetometerData,
+  liveLightData,
 );
 
 const engine: Engine = new PollingPredictorEngine(classifier, liveCombinedData);
@@ -62,11 +74,13 @@ const engine: Engine = new PollingPredictorEngine(classifier, liveCombinedData);
 export {
   accel,
   magnet,
+  light,
   engine,
   gestures,
   classifier,
   liveAccelerometerData,
   liveMagnetometerData,
+  liveLightData,
   liveCombinedData,
   sensorChoice,
 };

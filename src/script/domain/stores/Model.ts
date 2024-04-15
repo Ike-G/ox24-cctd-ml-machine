@@ -48,7 +48,7 @@ class Model implements Readable<ModelData> {
   ) {
     this.modelData = writable({
       trainingStatus: TrainingStatus.Untrained,
-      sensors: new SensorChoice(false, false),
+      sensors: new SensorChoice(false, false, false),
     });
   }
 
