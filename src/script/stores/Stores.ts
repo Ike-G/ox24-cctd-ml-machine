@@ -20,12 +20,13 @@ import Engine from '../domain/stores/Engine';
 import LiveData from '../domain/stores/LiveData';
 import CombinedLiveData from '../livedata/CombinedData';
 import SensorChoice from '../sensors/SensorChoice';
-import { writable, Readable, derived } from 'svelte/store';
+import { Readable, derived } from 'svelte/store';
 import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLightData';
+import PersistantWritable from '../repository/PersistantWritable';
 
-const accel = writable(false);
-const magnet = writable(false);
-const light = writable(false);
+const accel = new PersistantWritable(false, "accel-sensor-choice");
+const magnet = new PersistantWritable(false, "magnet-sensor-choice");
+const light = new PersistantWritable(false, "light-sensor-choice");
 const sensorChoice: Readable<SensorChoice> = derived(
   [accel, magnet, light],
   ([a, m, l]) => {
