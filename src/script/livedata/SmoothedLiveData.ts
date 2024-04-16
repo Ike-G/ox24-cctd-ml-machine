@@ -35,7 +35,7 @@ class SmoothedLiveData<T> implements LiveData<T> {
   }
 
   /**
-   * Throws an error. SmoothedLiveData wraps a LivedData object, if you wan't the buffer, please use the inner LiveData object
+   * Throws an error. SmoothedLiveData wraps a LiveData object, if you want the buffer, please use the inner LiveData object
    */
   public getBuffer(): LiveDataBuffer<T> {
     throw new Error(

@@ -20,7 +20,7 @@ class LiveDataBuffer<T> {
     this.bufferPtr++;
     this.buffer[bufferIndex] = {
       timestamp: Date.now(),
-      value: value,
+      value,
     };
   }
 

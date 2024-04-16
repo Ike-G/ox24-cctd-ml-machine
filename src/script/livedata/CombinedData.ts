@@ -52,6 +52,7 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
       Math.min(
         StaticConfiguration.magnetometerLiveDataBufferSize,
         StaticConfiguration.accelerometerLiveDataBufferSize,
+        StaticConfiguration.lightLiveDataBufferSize,
       ),
     );
     this.combinedStore = derived(
