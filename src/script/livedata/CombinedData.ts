@@ -1,6 +1,6 @@
 import { MicrobitAccelerometerData } from './MicrobitAccelerometerData';
 import { MicrobitMagnetometerData } from './MicrobitMagnetometerData';
-import { Subscriber, Unsubscriber, get, Readable, derived } from 'svelte/store';
+import { Subscriber, Unsubscriber, get, Readable, derived, Writable, writable } from 'svelte/store';
 import LiveData from '../domain/stores/LiveData';
 import LiveDataBuffer from '../domain/LiveDataBuffer';
 import StaticConfiguration from '../../StaticConfiguration';
@@ -41,7 +41,7 @@ export type CombinedData = {
 };
 
 class CombinedLiveData implements LiveData<FlatCombinedData> {
-  private combinedStore: Readable<FlatCombinedData>;
+  private combinedStore: Writable<FlatCombinedData>;
   private dataBuffer: LiveDataBuffer<FlatCombinedData>;
   constructor(
     accelerometerData: LiveData<MicrobitAccelerometerData>,
@@ -55,26 +55,40 @@ class CombinedLiveData implements LiveData<FlatCombinedData> {
         StaticConfiguration.lightLiveDataBufferSize,
       ),
     );
-    this.combinedStore = derived(
-      [accelerometerData, magnetometerData, lightData],
-      ([a, m, l]) => {
-        const data = {
-          accx: a.accx,
-          accy: a.accy,
-          accz: a.accz,
-          magx: m.magx,
-          magy: m.magy,
-          magz: m.magz,
-          light: l.l,
-        };
-        this.dataBuffer.addValue(data);
-        return data;
-      },
-    );
+    this.combinedStore = writable({
+      accy: 0, accx: 0, accz: 0,
+      magx: 0, magy: 0, magz: 0,
+      light: 0,
+    });
+
+    // Not using derive since that seems to be broken? 
+    // Maybe related to this: https://github.com/sveltejs/svelte/issues/3191
+    const sync = () => {
+      const acc = accelerometerData.getBuffer().getNewestValues(1)[0] ?? { accx: 0, accy: 0, accz: 0 };
+      const mag = magnetometerData.getBuffer().getNewestValues(1)[0] ?? { magx: 0, magy: 0, magz: 0 };
+      const light = lightData.getBuffer().getNewestValues(1)[0] ?? { l: 0 };
+      const data: FlatCombinedData = {
+        accy: acc.accy,
+        accx: acc.accx,
+        accz: acc.accz,
+        magx: mag.magx,
+        magy: mag.magy,
+        magz: mag.magz,
+        light: light.l,
+      };
+      this.dataBuffer.addValue(data);
+      this.combinedStore.set(data)
+    };
+
+    accelerometerData.subscribe(() => sync());
+    magnetometerData.subscribe(() => sync());
+    lightData.subscribe(() => sync());
   }
+
   public getBuffer(): LiveDataBuffer<FlatCombinedData> {
     return this.dataBuffer;
   }
+
   public put(data: FlatCombinedData): void {
     void data;
     throw new Error(
