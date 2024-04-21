@@ -78,7 +78,7 @@
       </div>
 
       <div
-        class="h-full w-full overflow-y-hidden overflow-x-auto
+        class="h-full w-full overflow-y-hidden overflow-x-hidden
     flex flex-col bg-backgrounddark shadow-2xl">
         <!-- CONTENT -->
         <div class="relative z-1 flex-1 overflow-y-auto flex-row">
