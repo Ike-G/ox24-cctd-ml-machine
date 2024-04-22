@@ -17,9 +17,12 @@
   import BaseDialog from '../dialogs/BaseDialog.svelte';
   import View3DLive from '../3d-inspector/View3DLive.svelte';
   import MicrobitLiveGraph from '../graphs/MicrobitLiveGraph.svelte';
+  import SensorChoice from '../../script/sensors/SensorChoice';
 
   let componentWidth: number;
   let connectDialogReference: ConnectDialogContainer;
+  let sensorChoice: SensorChoice;
+  
 
   const connectButtonClicked = () => {
     startConnectionProcess();
@@ -31,6 +34,30 @@
 
   const outputDisconnectButtonClicked = () => {
     Microbits.expelOutput();
+  };
+
+  const startAccelerometerData = () => {
+    sensorChoice = new SensorChoice(true, sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
+  };
+
+  const stopAccelerometerData = () => {
+    sensorChoice = new SensorChoice(true, sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
+  };
+
+  const startMagnetometerData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), true, sensorChoice.lightSelected());
+  };
+
+  const stopMagnetometerData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(),false , sensorChoice.lightSelected());
+  };
+
+  const startLightrData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), true);
+  };
+
+ const stopLightData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), false);
   };
 
   let isLive3DOpen = false;
@@ -52,7 +79,10 @@
     <!-- Input microbit is assigned -->
     <div class="flex flex-row w-full h-full">
       <div class="w-full h-full">
-        <MicrobitLiveGraph width={componentWidth - 160} />
+        <MicrobitLiveGraph 
+          width = {componentWidth - 160} 
+          currentSensorChoice = sensorChoice
+          />
       </div>
       {#if !$state.isInputReady}
         <!-- Input is not ready, but is assigned (Must be either reconnecting or have lost connection entirely) -->
