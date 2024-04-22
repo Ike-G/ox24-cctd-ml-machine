@@ -12,12 +12,29 @@
   } from '../../script/stores/Stores';
   import LiveGraph from './LiveGraph.svelte';
   import LiveData from '../../script/domain/stores/LiveData';
+  import SensorChoice from '../../script/sensors/SensorChoice';
 
   export let width: number;
+  export let currentSensorChoice: SensorChoice;
+
+  let selectedData: LiveData[] = [];
+
+  $: {
+    
+    if (currentSensorChoice.accelerometerSelected()) {
+      selectedData.push(liveAccelerometerData);
+    } 
+    if (currentSensorChoice.magnetometerSelected()) {
+      selectedData.push(liveMagnetometerData);
+    } 
+    if (currentSensorChoice.lightSelected()) {
+      selectedData.push(liveLightData);
+    }
+  }
 </script>
 
 <LiveGraph
   minValue={StaticConfiguration.liveGraphValueBounds.min}
   maxValue={StaticConfiguration.liveGraphValueBounds.max}
-  liveData={[liveAccelerometerData, liveMagnetometerData, liveLightData]}
+  liveData = selectedData
   {width} />
