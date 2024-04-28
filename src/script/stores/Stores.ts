@@ -24,7 +24,7 @@ import { Readable, derived } from 'svelte/store';
 import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLightData';
 import PersistantWritable from '../repository/PersistantWritable';
 
-const accel = new PersistantWritable(false, "accel-sensor-choice");
+const accel = new PersistantWritable(true, "accel-sensor-choice");
 const magnet = new PersistantWritable(false, "magnet-sensor-choice");
 const light = new PersistantWritable(false, "light-sensor-choice");
 const sensorChoice: Readable<SensorChoice> = derived(
