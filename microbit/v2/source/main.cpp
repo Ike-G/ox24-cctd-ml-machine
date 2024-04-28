@@ -101,7 +101,7 @@ void lightLoop() {
         int light = uBit.display.readLightLevel();
         uart->send(ManagedString("l_") + ManagedString(light));
 
-        fiber_sleep(30);
+        fiber_sleep(10);
     }
 }
 
