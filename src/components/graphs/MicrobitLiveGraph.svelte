@@ -6,9 +6,9 @@
 <script lang="ts">
   import StaticConfiguration from '../../StaticConfiguration';
   import {
-    liveAccelerometerData,
-    liveMagnetometerData,
-    liveLightData
+    liveAccelerometerData, accel,
+    liveMagnetometerData, magnet,
+    liveLightData, light
   } from '../../script/stores/Stores';
   import LiveGraph from './LiveGraph.svelte';
   import LiveData from '../../script/domain/stores/LiveData';
@@ -19,5 +19,9 @@
 <LiveGraph
   minValue={StaticConfiguration.liveGraphValueBounds.min}
   maxValue={StaticConfiguration.liveGraphValueBounds.max}
-  liveData={[liveAccelerometerData, liveMagnetometerData, liveLightData]}
+  liveData={[
+    {data: liveAccelerometerData, enabled: $accel},
+    {data: liveMagnetometerData, enabled: $magnet},
+    {data: liveLightData, enabled: $light}
+  ]}
   {width} />

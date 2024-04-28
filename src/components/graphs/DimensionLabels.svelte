@@ -29,6 +29,7 @@
   const CHARACTER_HEIGHT = 16;
 
   export let liveData: SmoothedLiveData<any>;
+  export let colors: string[];
   export let maxValue: number;
   export let minValue: number;
   export let graphHeight: number;
@@ -51,14 +52,13 @@
   });
 
   // Initialize labels with all-0 values
-  const initializeLabels = (): LabelData[] => {
+  const initializeLabels = (colors: string[]): LabelData[] => {
     const labels = [];
     for (let i = 0; i < liveData.getSeriesSize(); i++) {
       const label = liveData.getLabels()[i];
-      const color = StaticConfiguration.liveGraphColors[liveData.getPropertyNames()[i]];
       labels.push({
         label: label,
-        color: color,
+        color: colors[i],
         arrowHeight: 0,
         textHeight: 0,
         id: i,
@@ -67,7 +67,10 @@
     return labels;
   };
 
-  let labels: LabelData[] = initializeLabels();
+  let labels: LabelData[];
+  $: {
+    labels = initializeLabels(colors)
+  };
 
   function updateDimensionLabels(axes: number[]) {
     for (let i = 0; i < axes.length; i++) {
