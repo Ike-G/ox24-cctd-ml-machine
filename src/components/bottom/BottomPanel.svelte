@@ -52,7 +52,7 @@
     sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(),false , sensorChoice.lightSelected());
   };
 
-  const startLightrData = () => {
+  const startLightData = () => {
     sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), true);
   };
 
