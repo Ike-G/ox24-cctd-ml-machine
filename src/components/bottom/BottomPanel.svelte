@@ -36,28 +36,16 @@
     Microbits.expelOutput();
   };
 
-  const startAccelerometerData = () => {
-    sensorChoice = new SensorChoice(true, sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
+  const toggleAccelerometerData = () => {
+    sensorChoice = new SensorChoice(!sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
   };
 
-  const stopAccelerometerData = () => {
-    sensorChoice = new SensorChoice(true, sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
+  const toggleMagnetometerData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), !sensorChoice.magnetometerSelected(), sensorChoice.lightSelected());
   };
 
-  const startMagnetometerData = () => {
-    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), true, sensorChoice.lightSelected());
-  };
-
-  const stopMagnetometerData = () => {
-    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(),false , sensorChoice.lightSelected());
-  };
-
-  const startLightData = () => {
-    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), true);
-  };
-
- const stopLightData = () => {
-    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), false);
+  const toggleLightData = () => {
+    sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), !sensorChoice.lightSelected());
   };
 
   let showWidget = false;
@@ -90,15 +78,15 @@
 {#if showWidget}
   <div class="widget">
     <label>
-      <input type="checkbox">
+      <input type="checkbox" on:click={() => toggleAccelerometerData}>
       Accelerometer
     </label>
     <label>
-      <input type="checkbox">
+      <input type="checkbox" on:click={() => toggleMagnetometerData}>
       Magnetometer
     </label>
     <label>
-      <input type="checkbox">
+      <input type="checkbox" on:click={() => toggleLightData}>
       Light
     </label>
   </div>
@@ -124,6 +112,8 @@
           width = {componentWidth - 160} 
           currentSensorChoice = sensorChoice
           />
+      
+
       </div>
       {#if !$state.isInputReady}
         <!-- Input is not ready, but is assigned (Must be either reconnecting or have lost connection entirely) -->
