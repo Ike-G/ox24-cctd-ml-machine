@@ -5,7 +5,7 @@
  -->
 
 <script lang="ts">
-  import { SmoothieChart, TimeSeries } from 'smoothie';
+  import { ITimeSeriesPresentationOptions, SmoothieChart, TimeSeries } from 'smoothie';
   import LiveData from '../../../script/domain/stores/LiveData';
   import SmoothedLiveData from '../../../script/livedata/SmoothedLiveData';
   import { onMount } from 'svelte';
@@ -21,9 +21,7 @@
   type TimeSeriesWithData = TimeSeries & { data: number[][] };
 
   // Updates width to ensure that the canvas fills the whole screen
-  export let width: number;
-  export let liveData: LiveData<any>;
-  export let maxValue: number;
+  export let width: number; export let liveData: LiveData<any>; export let maxValue: number;
   export let minValue: number;
 
   // Smoothes real-time data by using the 3 most recent data points
@@ -93,5 +91,5 @@
 
 <main class="flex">
   <canvas bind:this={canvas} height="160" id="smoothie-chart" width={width - 30} />
-  <DimensionLabels {minValue} graphHeight={160} {maxValue} liveData={smoothedLiveData} />
+  <DimensionLabels {minValue} graphHeight={160} {maxValue} liveData={smoothedLiveData} colors={["#ffffff00", "#ffffff00", "#ffffff00"]}/>
 </main>
