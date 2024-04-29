@@ -60,8 +60,49 @@
     sensorChoice = new SensorChoice(sensorChoice.accelerometerSelected(), sensorChoice.magnetometerSelected(), false);
   };
 
+  let showWidget = false;
+
+  function toggleWidget() {
+    showWidget = !showWidget;
+  }
+
   let isLive3DOpen = false;
 </script>
+
+<style>
+  .button {
+    @apply bg-blue-500 text-white font-semibold py-2 px-4 rounded;
+  }
+
+  .widget {
+    @apply bg-white border border-gray-300 shadow-md p-4 absolute top-full left-0 mt-2 hidden;
+  }
+
+  .widget.show {
+    @apply block;
+  }
+</style>
+
+<button on:mouseover={toggleWidget} on:mouseout={toggleWidget} class="button">
+  Sensors
+</button>
+
+{#if showWidget}
+  <div class="widget">
+    <label>
+      <input type="checkbox">
+      Accelerometer
+    </label>
+    <label>
+      <input type="checkbox">
+      Magnetometer
+    </label>
+    <label>
+      <input type="checkbox">
+      Light
+    </label>
+  </div>
+{/if}
 
 <div
   bind:clientWidth={componentWidth}
