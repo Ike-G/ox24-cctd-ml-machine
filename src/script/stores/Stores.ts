@@ -24,14 +24,12 @@ import { Readable, derived } from 'svelte/store';
 import MicrobitLightLiveData, { MicrobitLightData } from '../livedata/MicrobitLightData';
 import PersistantWritable from '../repository/PersistantWritable';
 
-const accel = new PersistantWritable(false, "accel-sensor-choice");
+const accel = new PersistantWritable(true, "accel-sensor-choice");
 const magnet = new PersistantWritable(false, "magnet-sensor-choice");
 const light = new PersistantWritable(false, "light-sensor-choice");
 const sensorChoice: Readable<SensorChoice> = derived(
   [accel, magnet, light],
-  ([a, m, l]) => {
-    return new SensorChoice(a, m, l);
-  },
+  ([a, m, l]) => new SensorChoice(a, m, l),
 );
 
 const repositories: Repositories = new LocalStorageRepositories();
@@ -42,6 +40,7 @@ const gestures: Gestures = new Gestures(repositories.getGestureRepository());
 // We want to specify sensors at the training level, and have that carry over to each prediction.
 // ATTEMPT 1: Doing this by modifying trainModel
 const classifier: Classifier = repositories.getClassifierRepository().getClassifier();
+sensorChoice.subscribe(() => classifier.getModel().markAsUntrained());
 
 const accelerometerDataBuffer = new LiveDataBuffer<MicrobitAccelerometerData>(
   StaticConfiguration.accelerometerLiveDataBufferSize,

@@ -8,7 +8,7 @@
     import { state } from '../../script/stores/uiStore';
     import { onMount } from 'svelte';
     import { type Unsubscriber } from 'svelte/store';
-    import { SmoothieChart, TimeSeries } from 'smoothie';
+    import { ITimeSeriesPresentationOptions, SmoothieChart, TimeSeries } from 'smoothie';
     import DimensionLabels from './DimensionLabels.svelte';
     import LiveData from '../../script/domain/stores/LiveData';
     import StaticConfiguration from '../../StaticConfiguration';
@@ -28,6 +28,8 @@
   
     export let maxValue: number;
     export let minValue: number;
+
+    export let enabled: boolean;
   
     // Smoothes real-time data by using the 3 most recent data points
     const smoothedLiveData = new SmoothedLiveData(liveData, 3);
@@ -41,6 +43,34 @@
     }
     let recordLines = new TimeSeries();
     const lineWidth = 2;
+
+    function lerp(a: number, b: number, f: number): number {
+      return a + (b - a)*f;
+    }
+
+    function lerpCols(a: number, b: number, f: number): number {
+      return  Math.floor(lerp(a & 0xff, b & 0xff, f)) |
+              (Math.floor(lerp(a & 0xff00, b & 0xff00, f)) & 0xff00) |
+              (Math.floor(lerp(a & 0xff0000, b & 0xff0000, f)) & 0xff0000)
+    }
+
+    function mixGray(c: string) {
+      if (enabled) return c;
+      return "#" + lerpCols(
+        parseInt(c.slice(1), 16),
+        0x919191,
+        0.7
+      ).toString(16).padStart(6, "0");
+    }
+
+    let colors: string[];
+    const timeSeries: ITimeSeriesPresentationOptions[] = [];
+    $: {
+      colors = lines.map((_, i) => mixGray(StaticConfiguration.liveGraphColors[liveData.getPropertyNames()[i]]));
+      timeSeries.forEach((t, i) => {
+        t.strokeStyle = colors[i];
+      });
+    }
   
     // On mount draw smoothieChart
     onMount(() => {
@@ -54,16 +84,18 @@
           millisPerLine: 3000,
           borderVisible: false,
         },
+        labels: {
+          disabled: true
+        },
         interpolation: 'linear',
       });
-  
-      let i = 0;
-      for (const line of lines) {
-        chart.addTimeSeries(line, {
+      
+      for (let i = 0; i < lines.length; i++) {
+        chart.addTimeSeries(lines[i], {
           lineWidth,
-          strokeStyle: StaticConfiguration.liveGraphColors[liveData.getPropertyNames()[i]],
+          strokeStyle: colors[i],
         });
-        i++;
+        timeSeries.push(chart.getTimeSeriesOptions(lines[i]));
       }
   
       chart.addTimeSeries(recordLines, {
@@ -155,12 +187,17 @@
     };
 </script>
 
-<main class="flex">
-<canvas bind:this={canvas} height={160/3} id="smoothie-chart" width={width - 30} />
-<DimensionLabels
-    hidden={!$state.isInputConnected}
-    {minValue}
-    graphHeight={160/3}
-    {maxValue}
-    liveData={smoothedLiveData} />
+<main class="relative">
+  <div class="flex">
+    <canvas bind:this={canvas} height={160/3} id="smoothie-chart" width={width - 30} />
+    {#if !enabled}
+    <div class="absolute top-0 left-0 w-full h-full" style="background-color: rgb(200, 200, 200, 0.5);"></div>
+    {/if}
+    <DimensionLabels
+        hidden={!$state.isInputConnected}
+        {minValue}
+        graphHeight={160/3}
+        {maxValue}
+        liveData={smoothedLiveData} {colors} />
+  </div>
 </main>  

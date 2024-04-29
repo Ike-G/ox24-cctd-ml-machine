@@ -18,7 +18,7 @@
 
   // Updates width to ensure that the canvas fills the whole screen
   export let width: number;
-  export let liveData: LiveData<any>[];
+  export let liveData: {data: LiveData<any>, enabled: boolean}[];
 
   export let maxValue: number;
   export let minValue: number;
@@ -26,6 +26,6 @@
 
 <main class="flex flex-col divide-y-2">
   {#each liveData as data}
-    <LiveGraphRow width={width} liveData={data} maxValue={maxValue} minValue={minValue} />
+    <LiveGraphRow width={width} liveData={data.data} enabled={data.enabled} maxValue={maxValue} minValue={minValue} />
   {/each}
 </main>
