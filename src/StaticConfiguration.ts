@@ -136,7 +136,7 @@ class StaticConfiguration {
   public static readonly MoEModelTrainingSettings: MoEModelTrainingSettings = {
     noOfEpochs: 70,
     batchSize: 7,
-    learningRate: 0.05,
+    learningRate: 0.001,
     validationSplit: 0.1,
     noOfUnits: 16,
     numExperts: 2,
