@@ -150,20 +150,20 @@
   }
 
   function createLiveData() {
-    const liveData = liveCombinedData.getBuffer().getNewestValues(1)[0];
+    const liveData = liveCombinedData.getBuffer().getNewestValues(10);
     // const liveData = liveAccelerometerData.getBuffer().getNewestValues(1)[0];
     if (liveData === undefined) return undefined;
     const filteredData: RecordingRepresentation = {
       ID: uniqueLiveDataID,
       gestureClassName: 'live',
       gestureClassID: uniqueLiveDataID,
-      accx: filterFunction([liveData!.accx]),
-      accy: filterFunction([liveData!.accy]),
-      accz: filterFunction([liveData!.accz]),
-      magx: filterFunction([liveData!.magx]),
-      magy: filterFunction([liveData!.magy]),
-      magz: filterFunction([liveData!.magz]),
-      light: filterFunction([liveData!.light]),
+      accx: filterFunction(liveData.map(x => x!.accx)),
+      accy: filterFunction(liveData.map(x => x!.accy)),
+      accz: filterFunction(liveData.map(x => x!.accy)),
+      magx: filterFunction(liveData.map(x => x!.magx)),
+      magy: filterFunction(liveData.map(x => x!.magy)),
+      magz: filterFunction(liveData.map(x => x!.magz)),
+      light: filterFunction(liveData.map(x => x!.light)),
     };
     return filteredData;
   }
