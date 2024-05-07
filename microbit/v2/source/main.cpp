@@ -15,6 +15,7 @@
 #include "utilities.h"
 #include "smileys.h"
 
+
 MicroBit uBit;
 
 typedef __uint8_t uint8_t ;
@@ -41,6 +42,19 @@ void lightLoop();
  * @param s The message
  */
 void sendString(ManagedString s)
+{
+    if (connected == 0)
+        return;
+
+    uart->send(s);
+}
+
+/**
+ * @brief Sends an array of bytes with UART
+ * 
+ * @param s The bytes
+ */
+void sendBytes(uint8_t s)
 {
     if (connected == 0)
         return;
@@ -93,6 +107,11 @@ void onDelim(MicroBitEvent)
     if (prefix == "s_") { // Will be request to play sound
         ManagedString soundNo = r.substring(2,1);
         playSound(getSound(soundNo), beat);
+    }
+    if (prefix == "r_") { // Record and send back the recording
+        setBothSamples(11000);
+        record();
+        sendBytes(*getMicRecordingBuffer());
     }
 }
 

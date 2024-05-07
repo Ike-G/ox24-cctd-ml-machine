@@ -71,4 +71,32 @@ void printPairPatternAnimated();
 
 void printPairPattern();
 
+void checkEnv(int sampleRate);
+
+void record();
+
+void play();
+
+void stop();
+
+void erase();
+
+void setMicrophoneGain(float gain);
+
+int audioDuration(int sampleRate);
+
+bool audioIsPlaying();
+
+bool audioIsRecording();
+
+bool audioIsStopped();
+
+void setInputSampleRate(int sampleRate);
+
+void setOutputSampleRate(int sampleRate);
+
+void setBothSamples(int sampleRate);
+
+uint8_t *getMicRecordingBuffer();
+
 #endif
