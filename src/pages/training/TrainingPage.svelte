@@ -15,7 +15,7 @@
   import { classifier, gestures } from '../../script/stores/Stores';
   import StandardButton from '../../components/buttons/StandardButton.svelte';
   import LossGraph from '../../components/graphs/LossGraph.svelte';
-  import { writable } from 'svelte/store';
+  import { derived, writable } from 'svelte/store';
   import { LossTrainingIteration } from '../../components/graphs/LossGraphUtil';
   import StaticConfiguration from '../../StaticConfiguration';
   import CookieManager from '../../script/CookieManager';
@@ -29,6 +29,7 @@
   const sufficientData = gestures.hasSufficientData();
 
   const loss = writable<LossTrainingIteration[]>([]);
+  const maxX = writable<number>(0);
 
   const resetLoss = () => loss.set([]);
 
@@ -82,7 +83,7 @@
           </p>
         {/if}
         {#if $loss.length > 0 || $model.isTraining}
-          {#if !CookieManager.hasFeatureFlag('loss-graph')}
+          {#if CookieManager.hasFeatureFlag('loss-graph')}
             {#if $model.isTraining}
               <div
                 class="flex flex-col flex-grow justify-center items-center text-center">
@@ -100,7 +101,7 @@
           {:else}
             <LossGraph
               {loss}
-              maxX={StaticConfiguration.layersModelTrainingSettings.noOfEpochs} />
+              maxX={$maxX} />
           {/if}
         {/if}
         {#if !$model.isTraining}
@@ -112,6 +113,7 @@
             <div class="w-full pt-5 text-white pb-5">
               <TrainModelButton
                 onClick={resetLoss}
+                maxX={maxX}
                 onTrainingIteration={trainingIterationHandler} />
             </div>
           {/if}

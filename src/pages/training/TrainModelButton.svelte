@@ -19,14 +19,17 @@
   import { Feature, hasFeature } from '../../script/FeatureToggles';
   import StandardButton from '../../components/buttons/StandardButton.svelte';
   import { LossTrainingIteration } from '../../components/graphs/LossGraphUtil';
+  import { Writable } from 'svelte/store';
 
   export let onTrainingIteration: (iteration: LossTrainingIteration) => void;
   export let onClick: () => void;
+  export let maxX: Writable<number>;
 
   type ModelEntry = {
     id: string;
     title: string;
     label: string;
+    maxX: number;
     trainer: () => ModelTrainer<MLModel>;
   };
 
@@ -35,6 +38,7 @@
       id: 'NN',
       title: 'Neural network',
       label: 'neural network',
+      maxX: StaticConfiguration.layersModelTrainingSettings.noOfEpochs,
       trainer: () =>
         new LayersModelTrainer(StaticConfiguration.layersModelTrainingSettings, h => {
           onTrainingIteration(h);
@@ -44,13 +48,17 @@
       id: 'KNN',
       title: 'KNN',
       label: 'KNN',
+      maxX: 0,
       trainer: () => new KNNModelTrainer(StaticConfiguration.knnNeighbourCount),
     },
     {
       id: 'MoE',
       title: 'Mixture of Experts',
       label: 'mixture of experts',
-      trainer: () => new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings),
+      maxX: StaticConfiguration.MoEModelTrainingSettings.noOfEpochs,
+      trainer: () => new MoEModelTrainer(StaticConfiguration.MoEModelTrainingSettings, h => {
+          onTrainingIteration(h);
+        }),
     },
   ];
 
@@ -94,6 +102,7 @@
 
     if (selectedModel) {
       onClick();
+      maxX.set(selectedModel.maxX);
       model.train(selectedModel.trainer(), $sensorChoice);
     }
   };

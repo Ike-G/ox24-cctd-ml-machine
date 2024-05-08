@@ -159,7 +159,7 @@
       gestureClassID: uniqueLiveDataID,
       accx: filterFunction(liveData.map(x => x!.accx)),
       accy: filterFunction(liveData.map(x => x!.accy)),
-      accz: filterFunction(liveData.map(x => x!.accy)),
+      accz: filterFunction(liveData.map(x => x!.accz)),
       magx: filterFunction(liveData.map(x => x!.magx)),
       magy: filterFunction(liveData.map(x => x!.magy)),
       magz: filterFunction(liveData.map(x => x!.magz)),
