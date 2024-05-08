@@ -71,9 +71,9 @@
             },
           },
           y: {
-            type: 'logarithmic',
+            type: 'linear',
             min: 0,
-            max: 1,
+            max: Math.ceil(data.reduce((x, y) => Math.max(x, y.y), 0)),
             grid: {
               color: '#f3f3f3',
             },

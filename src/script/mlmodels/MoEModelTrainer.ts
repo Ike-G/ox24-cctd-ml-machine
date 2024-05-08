@@ -1,3 +1,4 @@
+import { LossTrainingIteration } from '../../components/graphs/LossGraphUtil';
 import ModelTrainer, { TrainingData } from '../domain/ModelTrainer';
 import LayersMLModel from './LayersMLModel';
 import * as tf from '@tensorflow/tfjs';
@@ -103,7 +104,11 @@ class GatingMultiplier extends tf.layers.Layer {
 }
 
 class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
-  constructor(private settings: MoEModelTrainingSettings) {}
+  constructor(
+    private settings: MoEModelTrainingSettings,
+    private onFitIteration: (h: LossTrainingIteration) => void,
+  ) {}
+  
   public async trainModel(trainingData: TrainingData): Promise<LayersMLModel> {
     // Fetch data
     const features: Array<number[]> = [];
@@ -133,7 +138,7 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
       input,
       this.settings.noOfUnits,
       this.settings.numExperts,
-    ) as tf.Tensor<tf.Rank>;
+    );
     const expertOutputs = Array.from(Array(this.settings.numExperts)).map(() =>
       applyExpertNetwork(input, this.settings.noOfUnits, numberOfClasses),
     );
@@ -156,20 +161,18 @@ class MoEModelTrainer implements ModelTrainer<LayersMLModel> {
     });
 
     // Train the MoE model
-    const history = await moeModel
-      .fit(tensorFeatures, tensorLabels, {
-        epochs: this.settings.noOfEpochs,
-        batchSize: this.settings.batchSize,
-        validationSplit: this.settings.validationSplit,
-      })
-      .catch(err => {
-        console.error('TensorFlow training process failed:', err);
-        return Promise.reject(err);
+    for (let i = 0; i < this.settings.noOfEpochs; i++) {
+      const h = await moeModel
+        .fit(tensorFeatures, tensorLabels, {
+          epochs: 1,
+          batchSize: this.settings.batchSize,
+          validationSplit: this.settings.validationSplit,
+        });
+      this.onFitIteration({
+        epoch: i,
+        loss: h.history.loss[0] as number,
       });
-
-    //logs a list of 0s and 1s for each epoch, if every item in epoch
-    //was classified then 1 else 0
-    console.log('val_acc: ', history.history['val_acc']);
+    }
 
     return Promise.resolve(new LayersMLModel(moeModel));
   }
